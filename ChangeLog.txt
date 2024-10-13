@@ -1,0 +1,11 @@
+Development path:
+ * Add documentation.
+ * Add and publish on GitHub
+ * Call for user responces.
+
+Known problems:
+ * Not yet available on GitHub.
+
+Version: 0.0.1 
+ * preparing for GitHub.
+ * minimal working base available.
