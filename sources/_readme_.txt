@@ -6,7 +6,7 @@ Version:
 
 The current version number is set in LaserGrayscales.csproj, node Project.PropertyGroup.Version
 
-The config file has a File Version number set in Config.FILE_VERSION
+The config class/file has a File Version number set in Config.FILE_VERSION
 
 Format for both version numbers is 'major.minor.build.bugfix'
 The major number is incremented on new functiontionality or large changeover.

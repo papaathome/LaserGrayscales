@@ -33,7 +33,6 @@ Version: 0.1.0.0, development, debug.
 Version 0.2.0.0, development release requirements:
 Release date: not yet available.
  * x documentation available
- * ? github sources publicly available.
  * v load and safe configuration file.
  * v generate test script file.
  * v button [generate] reports result and last successfull action.
@@ -75,8 +74,7 @@ Releases
 Version 0.2.0.0, development, stable.
 Version 0.1.0.0, development, debug.
 Not yet released, unmet requirements.
- * . documentation available
- * . github sources publicly available.
+ * x documentation available
  * v load and safe configuration file.
  * v generate test script file.
 
