@@ -17,11 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="LaserGrayscales_releaselog.md" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="LaserGrayscales_releaselog.md">
+    <Content Include="..\..\ChangeLog.txt" Link="ChangeLog.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\images\bootscreen.png" Link="Images\bootscreen.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -36,6 +35,20 @@
     <None Update="LaserGrayscales.log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="doc\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\..\doc\LaserGrayscales-Introduction.md" Link="doc\LaserGrayscales-Introduction.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LaserGrayscales_releaselog.md" Link="LaserGrayscales_releaselog.md" />
   </ItemGroup>
 
 </Project>

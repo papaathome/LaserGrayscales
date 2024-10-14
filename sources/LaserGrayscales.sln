@@ -7,6 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LaserGrayscales", "LaserGra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_solution", "_solution", "{5C7D6E22-CF83-4C70-9F36-B7322E1B6511}"
 	ProjectSection(SolutionItems) = preProject
+		LaserGrayscales_releaselog.md = LaserGrayscales_releaselog.md
 		_readme_.txt = _readme_.txt
 	EndProjectSection
 EndProject

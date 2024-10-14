@@ -13,66 +13,7 @@ With LaserGrayscales both approaches are possible. For more details see the Lase
 In this file details about released versions and the development path for LaserGrayscales is given.
 
 
-Content
--------
-* Development path.
-* Known problems.
-* Releases.
+For some documentation see file "./doc/LaserGrayscales-Introduction.md"
 
+For a change log see project file "./ChangeLog.txt"
 
-Development path
-----------------
-
-Requirement status:
- * ? Requested, may move to a following release.
- * . Not yet implemented.
- * x Implemented but partial, untested or broken.
- * v Implemented and tested.
-
-Version: 0.3.0.0, development, debug.
-Version 0.4.0.0, development release
-Requirements:
- * not yet selected.
-
-ersion: x.y.0.0, wishlist.
- * ? Add unit testing.
- * ? Documentatin in PDF format.
- * ? button [generate] enabled when the configuration is valid.
- * ? icon for Grayscales.
- * ? swap X and Y axis.
- * ? load/store different configurations.
- * ? Set Z height.
- * ? Set G0 speed.
- * ? Set F scale in mm/sec or mm/min (GUI only)
- * ? Set (0, 0) location.
- * ? Set laser power command using S or Q
- * ? Set comment mode using ';' or '(' and ')'
- * ? Report min/max at design time in GUI.
- * ? Add a border and grid (scaled)
- * ? Add form for settings.
- * ? Add lead in and lead out for acceleration compensation.
- * ? Add side rulers pattern.
- * ? Add up and down ruler pattern for backlash checking.
- * ? Add image encoding.
-
-
-Known problems
---------------
-
-Issues and bugs are not yet recorded (which is an issue on its own).
-For the time being, known problems are recorded here.
-
- 3 . Path to the test script file must be edited 'by hand', path selector not (yet) implemented.
- 2 v Button [generate] does not report results to the user.
- 1 . Button [generate] is always enabled, also when the configuration is not valid.
-
-
-Releases
---------
-
-Version: 0.1.0.0, development, debug.
-Version 0.2.0.0, development release.
-Release date:2024-10-14.
- * minimum documentation as markdown text available.
- * load and safe configuration file.
- * generate test script file.
