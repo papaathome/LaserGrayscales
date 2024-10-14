@@ -29,15 +29,14 @@ Requirement status:
  * x Implemented but partial, untested or broken.
  * v Implemented and tested.
 
-Version: 0.1.0.0, development, debug.
-Version 0.2.0.0, development release requirements:
-Release date: not yet available.
- * x documentation available
- * v load and safe configuration file.
- * v generate test script file.
- * v button [generate] reports result and last successfull action.
+Version: 0.3.0.0, development, debug.
+Version 0.4.0.0, development release
+Requirements:
+ * not yet selected.
 
-Version: x.y.0.0, wishlist.
+ersion: x.y.0.0, wishlist.
+ * ? Add unit testing.
+ * ? Documentatin in PDF format.
  * ? button [generate] enabled when the configuration is valid.
  * ? icon for Grayscales.
  * ? swap X and Y axis.
@@ -71,10 +70,9 @@ For the time being, known problems are recorded here.
 Releases
 --------
 
-Version 0.2.0.0, development, stable.
-Version 0.1.0.0, development, debug.
-Not yet released, unmet requirements.
- * x documentation available
- * v load and safe configuration file.
- * v generate test script file.
-
+Version: 0.1.0.0, development, debug.
+Version 0.2.0.0, development release.
+Release date:2024-10-14.
+ * minimum documentation as markdown text available.
+ * load and safe configuration file.
+ * generate test script file.
