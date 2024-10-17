@@ -95,13 +95,28 @@
         </GroupBox>
         <TabControl Grid.Row="2">
             <TabItem Header="Intro">
-                <TextBlock Text="{Binding Intro}"/>
+                <TextBox
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility ="Auto"
+                    FontFamily="Courier New" FontSize="10"
+                    AcceptsReturn="True"
+                    Text="{Binding Intro}"/>
             </TabItem>
             <TabItem Header="Header">
-                <TextBlock Text="{Binding Header}"/>
+                <TextBox
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility ="Auto"
+                    FontFamily="Courier New" FontSize="10"
+                    AcceptsReturn="True"
+                    Text="{Binding Header}"/>
             </TabItem>
             <TabItem Header="Footer">
-                <TextBlock Text="{Binding Footer}"/>
+                <TextBox
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility ="Auto"
+                    FontFamily="Courier New" FontSize="10"
+                    AcceptsReturn="True"
+                    Text="{Binding Footer}"/>
             </TabItem>
         </TabControl>
         <Grid Grid.Row="3" Margin="3,0,3,3">
@@ -110,15 +125,18 @@
                 <ColumnDefinition Width="*" MinWidth="100" />
                 <ColumnDefinition Width="auto" MinWidth="100" />
                 <ColumnDefinition Width="auto" MinWidth="100" />
+                <ColumnDefinition Width="auto" MinWidth="100" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Right" >Test file</TextBlock>
             <TextBox   Grid.Column="1" Margin="3" VerticalAlignment="Center"
                  Text="{Binding Path=Testfile}"/>
-            <TextBlock Grid.Column="2" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"
+            <Button Grid.Column="2" Margin="3" VerticalAlignment="Center"
+                    Content="File" x:Name="TestFilePath"/>
+            <TextBlock Grid.Column="3" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"
                        Text="{Binding GenerateTime, StringFormat={}generated at {0:HH:mm:ss}}"
                         Foreground="{Binding GenerateForground}"/>
-            <Button Grid.Column="3" Margin="3" VerticalAlignment="Center"
+            <Button Grid.Column="4" Margin="3" VerticalAlignment="Center"
                     Content="Generate" x:Name="Generate"/>
         </Grid>
     </Grid>

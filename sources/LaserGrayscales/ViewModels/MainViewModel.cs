@@ -1,20 +1,29 @@
 ﻿using System.ComponentModel;
+using System.IO;
 
 using Caliburn.Micro;
 using As.Applications.Data;
 using As.Applications.Loggers;
 using As.Applications.Models;
+using As.Applications.Procedures;
 
 namespace As.Applications.ViewModels
 {
-    internal class MainViewModel : Conductor<object>, IDataErrorInfo
+    internal class MainViewModel : Conductor<object>, IDataErrorInfo, IViewValidInfo
     {
         static readonly ILogger log = (ILogger)LogManager.GetLog(typeof(MainViewModel));
 
         public MainViewModel()
         {
             X = new ScaleViewModel(Config.AppConfig.GrayScale.X, SelectedGroupMode);
+            X.OnIsValidViewChanged += OnViewValidChanged;
+
             Y = new ScaleViewModel(Config.AppConfig.GrayScale.Y, SelectedGroupMode.Covariant());
+            Y.OnIsValidViewChanged += OnViewValidChanged;
+
+            ValidateGroupCount();
+            ValidateGroupGap();
+            ValidateGroupMode();
         }
 
         #region IDataErrorInfo
@@ -23,17 +32,49 @@ namespace As.Applications.ViewModels
         public string this[string item]
             => item switch
             {
-                nameof(GroupCount) => ValidateGroupCount,
-                nameof(GroupGap) => ValidateGroupGap,
-                nameof(GroupMode) => ValidateGroupMode,
+                nameof(GroupCount) => ValidateGroupCount(),
+                nameof(GroupGap) => ValidateGroupGap(),
+                nameof(GroupMode) => ValidateGroupMode(),
                 _ => string.Empty,
             };
         #endregion IDataErrorInfo
+
+        #region ViewValid
+        bool _isvalid_view = false;
+        public bool IsValidView
+        {
+            get { return _isvalid_view; }
+            private set
+            {
+                if (_isvalid_view != value)
+                {
+                    _isvalid_view = value;
+                    CanGenerate = value;
+                    OnIsValidViewChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        public event IsValidViewChanged? OnIsValidViewChanged;
+
+        void ValidateView()
+        {
+            IsValidView =
+                X.IsValidView &&
+                Y.IsValidView &&
+                IsValidGroupCount &&
+                IsValidGroupGap &&
+                IsValidMode;
+        }
+        #endregion ViewValid
 
         #region Data
         public ScaleViewModel X { get; private set; }
 
         public ScaleViewModel Y { get; private set; }
+
+        void OnViewValidChanged(object sender, EventArgs e)
+            => ValidateView();
 
         public int GroupCount
         {
@@ -48,7 +89,26 @@ namespace As.Applications.ViewModels
             }
         }
 
-        private string ValidateGroupCount => (0 < GroupCount) ? string.Empty : $"Group count {GroupCount} less than 0";
+        bool _isvalid_group_count = false;
+        bool IsValidGroupCount
+        {
+            get { return _isvalid_group_count; }
+            set
+            {
+                if (_isvalid_group_count != value)
+                {
+                    _isvalid_group_count = value;
+                    ValidateView();
+                }
+            }
+        }
+
+        string ValidateGroupCount()
+        {
+            var result = string.Empty;
+            IsValidGroupCount = GroupCount.TryIsValidMinimum(0, ref result, open_interval: true);
+            return result;
+        }
 
         public double GroupGap
         {
@@ -63,7 +123,26 @@ namespace As.Applications.ViewModels
             }
         }
 
-        private string ValidateGroupGap => (0 < GroupGap) ? string.Empty : $"Group gap {GroupGap} less than 0";
+        bool _isvalid_group_gap = false;
+        bool IsValidGroupGap
+        {
+            get { return _isvalid_group_gap; }
+            set
+            {
+                if (_isvalid_group_gap != value)
+                {
+                    _isvalid_group_gap = value;
+                    ValidateView();
+                }
+            }
+        }
+
+        string ValidateGroupGap()
+        {
+            var result = string.Empty;
+            IsValidGroupGap = GroupGap.TryIsValidMinimum(0, ref result);
+            return result;
+        }
 
         // see: https://stackoverflow.com/questions/9608282/how-to-do-caliburn-micro-binding-of-view-model-to-combobox-selected-value
         public List<Mode> GroupMode { get; private set; } = [Mode.Power, Mode.Speed];
@@ -82,13 +161,36 @@ namespace As.Applications.ViewModels
             }
         }
 
-        private string ValidateGroupMode
-            => SelectedGroupMode switch
+        bool _isvalid_mode = false;
+        bool IsValidMode
+        {
+            get { return _isvalid_mode; }
+            set
             {
-                Mode.Speed => string.Empty,
-                Mode.Power => string.Empty,
-                _ => $"Group mode {SelectedGroupMode} not recognised",
-            };
+                if (_isvalid_mode != value)
+                {
+                    _isvalid_mode = value;
+                    ValidateView();
+                }
+            }
+        }
+
+        private string ValidateGroupMode()
+        {
+            var result = string.Empty;
+            switch (SelectedGroupMode)
+            {
+                case Mode.Power:
+                case Mode.Speed:
+                    IsValidMode = true;
+                    break;
+                default:
+                    IsValidMode = false;
+                    result = $"Group mode {SelectedGroupMode} not recognised";
+                    break;
+            }
+            return result;
+        }
 
         public string Intro
         {
@@ -143,8 +245,35 @@ namespace As.Applications.ViewModels
         }
         #endregion Data
 
-        // TODO v0.3: validating status must be OK.
-        //public bool CanGenerate => true;
+        public void TestFilePath()
+        {
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
+            {
+                FileName = Testfile,
+                DefaultExt = Path.GetExtension(Testfile),
+                Filter = "GCode files |*.nc;*.ngc;*.gcode|all|*.*"
+            };
+
+            Nullable<bool> result = dlg.ShowDialog();
+            if (result == true)
+            {
+                Testfile = dlg.FileName;
+            }
+        }
+
+        bool _can_generate = false;
+        public bool CanGenerate
+        {
+            get { return _can_generate; }
+            private set
+            {
+                if (_can_generate != value)
+                {
+                    _can_generate = value;
+                    NotifyOfPropertyChange(nameof(CanGenerate));
+                }
+            }
+        }
 
         public void Generate()
         {

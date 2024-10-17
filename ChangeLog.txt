@@ -7,6 +7,10 @@ Requirement status:
  * x Implemented but partial, untested or broken.
  * v Implemented and tested.
 
+Version: 0.1.2.0, development, debug.
+Requirements:
+ * not yet selected.
+
 Version: 0.3.0.0, development, debug.
 Version 0.4.0.0, development release
 Requirements:
@@ -16,7 +20,6 @@ version: x.y.0.0, wishlist.
  * ? Add unit testing.
  * ? Add bug tracking tool.
  * ? Documentation in PDF format.
- * ? button [generate] enabled when the configuration is valid.
  * ? icon for Grayscales.
  * ? swap X and Y axis.
  * ? load/store different configurations.
@@ -33,6 +36,8 @@ version: x.y.0.0, wishlist.
  * ? Add side rulers pattern.
  * ? Add up and down ruler pattern for backlash checking.
  * ? Add image encoding.
+ * ? Rotate the test pattern over an arbitrary angle.
+ * ? Add engraving pattern up, down and repeat.
 
 
 Known problems
@@ -41,17 +46,24 @@ Known problems
 Issues and bugs are not yet recorded in a bug tracking system (which is an issue on its own).
 For the time being, known problems are recorded here.
 
- 3 . Path to the test script file must be edited 'by hand', path selector not (yet) implemented.
+ 4 v Can not edit text in tabs, must edit config XML to change it.
+ 3 v Path selector for safe file required.
  2 v Button [generate] does not report results to the user.
- 1 . Button [generate] is always enabled, also when the configuration is not valid.
+ 1 v Button [generate] is always enabled, also when the configuration is not valid.
 
 
 Releases
 --------
 
+Version: 0.1.1.0, development, debug.
+Release date: 2024-10-17.
+ * Can edit Intro, header and footer text.
+ * Path selector for safe file available.
+ * Button [generate] is enabled when the configuration is valid.
+
 Version: 0.1.0.0, development, debug.
 Version 0.2.0.0, development release.
-Release date:2024-10-14.
+Release date: 2024-10-14.
  * minimum documentation as markdown text available.
  * load and safe configuration file.
  * generate test script file.

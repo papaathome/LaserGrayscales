@@ -1,17 +1,28 @@
-﻿using Caliburn.Micro;
+﻿using System.ComponentModel;
+
+using Caliburn.Micro;
 using As.Applications.Models;
-using System.ComponentModel;
+using As.Applications.Procedures;
+using As.Applications.Data;
 
 namespace As.Applications.ViewModels
 {
-    internal class ScaleViewModel : Screen, IDataErrorInfo
+    internal class ScaleViewModel : Screen, IDataErrorInfo, IViewValidInfo
     {
         public ScaleViewModel(Scale scale, Mode mode)
         {
             Scale = scale;
             Mode = mode;
+
+            ValidateFirst();
+            ValidateLast();
+            ValidateStep();
+            ValidateIncrement();
         }
 
+        readonly Scale Scale;
+
+        #region IDataErrorInfo
         public string Error => string.Empty;
 
         public string this[string item]
@@ -20,15 +31,44 @@ namespace As.Applications.ViewModels
             {
                 return item switch
                 {
-                    nameof(First) => ValidateRange(First, Minimum, Maximum),
-                    nameof(Last) => ValidateRange(Last, Minimum, Maximum),
+                    nameof(First) => ValidateFirst(),
+                    nameof(Last) => ValidateLast(),
+                    nameof(Step) => ValidateStep(),
+                    nameof(Increment) => ValidateIncrement(),
                     _ => string.Empty,
                 };
             }
         }
+        #endregion IDataErrorInfo
 
-        readonly Scale Scale;
+        #region IViewValidInfo
+        bool _isvalid_view = false;
+        public bool IsValidView
+        {
+            get { return _isvalid_view; }
+            private set
+            {
+                if (_isvalid_view != value)
+                {
+                    _isvalid_view = value;
+                    OnIsValidViewChanged?.Invoke(this, EventArgs.Empty);
+                }
+            }
+        }
 
+        public event IsValidViewChanged? OnIsValidViewChanged;
+
+        void ValidateView()
+        {
+            IsValidView =
+                IsValidFirst &&
+                IsValidLast &&
+                IsValidStep &&
+                IsValidIncrement;
+        }
+        #endregion IViewValidInfo
+
+        #region Data
         Mode _mode;
         public Mode Mode
         {
@@ -90,6 +130,27 @@ namespace As.Applications.ViewModels
             }
         }
 
+        bool _isvalid_first = false;
+        bool IsValidFirst
+        {
+            get { return _isvalid_first; }
+            set
+            {
+                if (_isvalid_first != value)
+                {
+                    _isvalid_first = value;
+                    ValidateView();
+                }
+            }
+        }
+
+        string ValidateFirst()
+        {
+            var result = string.Empty;
+            IsValidFirst = First.TryIsValidRange(Minimum, Maximum, ref result);
+            return result;
+        }
+
         public int Last
         {
             get => Scale.Last;
@@ -101,6 +162,27 @@ namespace As.Applications.ViewModels
                     NotifyOfPropertyChange(nameof(Last));
                 }
             }
+        }
+
+        bool _isvalid_last = false;
+        bool IsValidLast
+        {
+            get { return _isvalid_last; }
+            set
+            {
+                if (_isvalid_last != value)
+                {
+                    _isvalid_last = value;
+                    ValidateView();
+                }
+            }
+        }
+
+        string ValidateLast()
+        {
+            var result = string.Empty;
+            IsValidLast = Last.TryIsValidRange(Minimum, Maximum, ref result);
+            return result;
         }
 
         public int Step
@@ -116,6 +198,27 @@ namespace As.Applications.ViewModels
             }
         }
 
+        bool _isvalid_step = false;
+        bool IsValidStep
+        {
+            get { return _isvalid_step; }
+            set
+            {
+                if (_isvalid_step != value)
+                {
+                    _isvalid_step = value;
+                    ValidateView();
+                }
+            }
+        }
+
+        string ValidateStep()
+        {
+            var result = string.Empty;
+            IsValidStep = Step.TryIsValidMinimum(0, ref result, open_interval:true);
+            return result;
+        }
+
         public double Increment
         {
             get => Scale.Increment;
@@ -129,12 +232,26 @@ namespace As.Applications.ViewModels
             }
         }
 
-        static string ValidateRange(int value, int minimum, int maximum)
+        bool _isvalid_increment = false;
+        bool IsValidIncrement
         {
-            return
-                  (value < minimum)  ? $"Value {value} is less than minimum of {minimum}"
-                : (maximum < value ) ? $"Maximum of {maximum} is less than value {value}"
-                : "";
+            get { return _isvalid_increment; }
+            set
+            {
+                if (_isvalid_increment != value)
+                {
+                    _isvalid_increment = value;
+                    ValidateView();
+                }
+            }
         }
+
+        string ValidateIncrement()
+        {
+            var result = string.Empty;
+            IsValidIncrement = Increment.TryIsValidMinimum(0, ref result, open_interval: true);
+            return result;
+        }
+        #endregion Data
     }
 }

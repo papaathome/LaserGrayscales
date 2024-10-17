@@ -10,7 +10,7 @@ A full documentation of LaserGrayscales is not yet available. This introduction 
 **Warning**: Generating a test script does imply that a file is generated. It does **not** imply that a _valid_ file is generated. Always check the content of a generated test script before you run it!
 
 <p align="center">
-  <img alt="LaserGrayscales started" src="..\images\bootscreen.png">
+  <img alt="LaserGrayscales started" src=".\bootscreen.png">
 </p>
 
 ## Table of content
@@ -126,7 +126,7 @@ M99    ( return, subroutine label 100 end )
 
 
 <p align="center">
-  <img alt="LaserGrayscales started" src="..\images\bootscreen.png">
+  <img alt="LaserGrayscales started" src=".\bootscreen.png">
 </p>
 
 

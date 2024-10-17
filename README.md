@@ -5,7 +5,7 @@ Generate gray scales in G-code for CNC laser engravers, c# vs2022, .NET 8 WPF ap
 Laser engraving as function of X and Y where one axis is changing speed and the other is changing laser power.
 
 <p align="center">
-  <img alt="LaserGrayscales started" src=".\images\bootscreen.png">
+  <img alt="LaserGrayscales started" src=".\doc\bootscreen.png">
 </p>
 
 ## Introduction

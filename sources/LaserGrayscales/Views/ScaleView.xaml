@@ -72,6 +72,7 @@
             Text="{Binding Path=Step,
                    Converter={StaticResource ConverterToIntCi}, ConverterParameter=0,
                    UpdateSourceTrigger=LostFocus,
+                   ValidatesOnDataErrors=true,
                    NotifyOnValidationError=true}" >
         </TextBox>
 
@@ -84,6 +85,7 @@
                 Text="{Binding Path=Increment,
                        Converter={StaticResource ConverterToDoubleCi}, ConverterParameter=0.###,
                        UpdateSourceTrigger=LostFocus,
+                       ValidatesOnDataErrors=true,
                        NotifyOnValidationError=true}" >
             </TextBox>
             <TextBlock Grid.Column="1" Margin="-33,0,3,0" VerticalAlignment="Center" Text="mm"/>
