@@ -6,6 +6,7 @@ using As.Applications.Data;
 using As.Applications.Loggers;
 using As.Applications.Models;
 using As.Applications.Procedures;
+using As.Applications.Appenders;
 
 namespace As.Applications.ViewModels
 {
@@ -24,6 +25,8 @@ namespace As.Applications.ViewModels
             ValidateGroupCount();
             ValidateGroupGap();
             ValidateGroupMode();
+
+            UI.OnUiEventHandler += OnUiEvent;
         }
 
         #region IDataErrorInfo
@@ -277,23 +280,8 @@ namespace As.Applications.ViewModels
 
         public void Generate()
         {
-            log.InfoFormat($"Generate: path = \"{Config.AppConfig.Testscript}\"");
+            UI.InfoFormat($"Generate: path = \"{Config.AppConfig.Testscript}\"");
             GenerateValid = Manager.Generate();
-            GenerateTime = DateTime.Now;
-        }
-
-        DateTime _generate_time = DateTime.Now;
-        public DateTime GenerateTime
-        {
-            get { return _generate_time; }
-            private set
-            {
-                if (_generate_time != value)
-                {
-                    _generate_time = value;
-                    NotifyOfPropertyChange(nameof(GenerateTime));
-                }
-            }
         }
 
         bool _generate_valid = false;
@@ -306,14 +294,8 @@ namespace As.Applications.ViewModels
                 {
                     _generate_valid = value;
                     NotifyOfPropertyChange(nameof(GenerateValid));
-                    NotifyOfPropertyChange(nameof(GenerateForground));
                 }
             }
-        }
-
-        public string GenerateForground
-        {
-            get { return (GenerateValid) ? "Black" : "Red"; }
         }
 
         void SetScaleModes()
@@ -321,5 +303,37 @@ namespace As.Applications.ViewModels
             X.Mode = SelectedGroupMode;
             Y.Mode = SelectedGroupMode.Covariant();
         }
+
+        string _console = string.Empty;
+        public string Console
+        {
+            get { return _console; }
+            set
+            {
+                if (_console != value)
+                {
+                    _console = value;
+                    NotifyOfPropertyChange(nameof(Console));
+                }
+            }
+        }
+
+        void OnUiEvent(object? sender, MessageLoggedEventArgs e)
+            => ConsoleWriteln(e.RenderedLoggingEvent);
+
+        void ConsoleWriteln(string message)
+        {
+            if (string.IsNullOrEmpty(Console))
+            {
+                Console = message;
+            }
+            else
+            {
+                Console += Environment.NewLine + message;
+            }
+        }
+
+        void CondoleClear()
+            => Console = string.Empty;
     }
 }

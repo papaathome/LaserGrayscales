@@ -7,15 +7,11 @@ Laser engraving as function of X and Y where one axis is changing speed and the 
 
 A full documentation of LaserGrayscales is not yet available. This introduction will explain the basics but not with all details.
 
-**Warning**: Generating a test script does imply that a file is generated. It does **not** imply that a _valid_ file is generated. Always check the content of a generated test script before you run it!
+**Warning**: Generating a test script does imply that a file is generated. It does **not** imply that a _valid_ file is generated. Always check the content of a generated test script before you run it! Remember, LaserGrayscales is still in beta versions.
 
 <p align="center">
   <img alt="LaserGrayscales started" src=".\bootscreen.png">
 </p>
-
-## Table of content
-
-[TOC]
 
 
 ## Introduction.
@@ -28,7 +24,7 @@ Another approach is to generate an general overview in large steps to find corse
 
 With LaserGrayscales both approaches are possible.
 
-LaserGrayscales was started 'out of necessity' of having no proper test tools for a new laser engraver tool. On the internet a [g-code script](https://www.thingiverse.com/thing:3349071) is available but its use of g-code is targeting different elements of the industry standard RS274 format. Changing the script manually was time consuming and just for one script where more testing is required.
+LaserGrayscales was started 'out of necessity' of having no proper test tools for a new laser engraver tool. On the internet a [g-code script](https://www.thingiverse.com/thing:3349071) is available but its use of g-code is targeting different elements of the industry standard RS274 format than what was acceptable for some g-code interpreter. Changing the script manually was time consuming and just for one script where more testing is required.
 
 
 ### How it works.
@@ -136,6 +132,7 @@ From top to bottom you will find the following sections on the main form.
 - X-axis, external loop.
 - Tabs for intro, header and footer.
 - Line for generating test script files.
+- Console like block for progress reportings.
 
 ### Axis configuration.
 
@@ -163,13 +160,14 @@ Three tabs with free text. The text in each tab is verbatim copied to the script
 ### Line for generating test script files.
 
 - Test file path: any path to a location and filename for the test script file to generate.
+- Button 'File': A 'save files' browser is opened to select a new output file path.
 - Button 'Generate': The test file is generated on pushing this button.
 
-A red or black timestamp is shown left to the 'Generate' button. This time stamp is the last time a script is generated. It is coloured red if generation did fail and black if it was done with success.
+On clicking 'Generate' progress is reported in the console block below.
 
-When the program starts a red timestamp is shown to indicate the starting time and that no script has been generated yet.
+### Console block.
 
-A black timestamp does imply that a file is generated. It does **not** imply that a _valid_ file is generated. Always check the content of a generated test script before you run it!
+Used to report all progress and problems.
 
 ## The configuration file.
 
@@ -241,12 +239,20 @@ If you do not want to generate any log file make the following change to 'LaserG
 
 For all logging on.
 ```
-<level value="ALL" />
+<root>
+    <!-- Levels = [ OFF, FATAL, ERROR, WARN, INFO, DEBUG, ALL ] -->
+    <level value="ALL" />
+    ...
+</root>
 ```
 
 
 For all logging off.
 ```
-<level value="OFF" />
+<root>
+    <!-- Levels = [ OFF, FATAL, ERROR, WARN, INFO, DEBUG, ALL ] -->
+    <level value="OFF" />
+    ...
+</root>
 ```
 When switched off a log file is still generated but nothing is writen to it, the file will have a size of 0 bytes.

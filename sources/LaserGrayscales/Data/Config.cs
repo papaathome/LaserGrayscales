@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using Caliburn.Micro;
 using As.Applications.Loggers;
 using As.Applications.Models;
+using UI = As.Applications.Loggers.UI;
 
 namespace As.Applications.Data
 {
@@ -42,13 +43,13 @@ namespace As.Applications.Data
             AppName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? Manager.APPLICATION_NAME;
             AppVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             log.InfoFormat($"Config: Load {AppName} v{AppVersion}");
-
+            UI.InfoFormat($"Config: Load {AppName} v{AppVersion}");
 
             AppConfig = new Config(); // just to prevent compiler nagging.
             _app_config = new Config();
 
             StoreOnExit = LoadApp() != null;
-            Application.Current.Exit += Current_Exit;
+            //Application.Current.Exit += Current_Exit;
         }
 
         /// <summary>
@@ -59,6 +60,7 @@ namespace As.Applications.Data
         static void Current_Exit(object sender, ExitEventArgs e)
         {
             if (StoreOnExit && AppConfigChanged) _StoreApp();
+            UI.InfoFormat($"Config: Release {AppName} v{AppVersion}");
             log.InfoFormat($"Config: Release {AppName} v{AppVersion}");
         }
 

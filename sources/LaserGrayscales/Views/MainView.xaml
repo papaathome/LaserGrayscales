@@ -8,7 +8,7 @@
         xmlns:data="clr-namespace:As.Applications.Data"
         d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
         mc:Ignorable="d"
-        Title="MainView" Height="450" Width="800">
+        Title="MainView" Height="500" Width="800">
     <Window.Resources>
         <ResourceDictionary>
             <data:ConverterToIntCi x:Key="ConverterToIntCi" />
@@ -39,8 +39,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" MinHeight="75" />
             <RowDefinition Height="auto" MinHeight="95" />
-            <RowDefinition Height="*" MinHeight="75" />
+            <RowDefinition Height="2*" MinHeight="75" MaxHeight="150" />
             <RowDefinition Height="auto" MinHeight="25" />
+            <RowDefinition Height="*" MinHeight="100"/>
         </Grid.RowDefinitions>
 
         <GroupBox Grid.Row="0" Header="Y-axis, internal loop">
@@ -83,7 +84,6 @@
                                    NotifyOnValidationError=true}"/>
                         <TextBlock Grid.Column="1" Margin="-33,0,3,0" VerticalAlignment="Center" Text="mm"/>
                     </Grid>
-
                     <TextBox   Grid.Column="5" Margin="3,0,36,0" VerticalAlignment="Center"
                         Text="{Binding Path=GroupCount,
                                Converter={StaticResource ConverterToIntCi}, ConverterParameter=0,
@@ -98,7 +98,7 @@
                 <TextBox
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility ="Auto"
-                    FontFamily="Courier New" FontSize="10"
+                    FontFamily="Courier New" FontSize="12"
                     AcceptsReturn="True"
                     Text="{Binding Intro}"/>
             </TabItem>
@@ -106,7 +106,7 @@
                 <TextBox
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility ="Auto"
-                    FontFamily="Courier New" FontSize="10"
+                    FontFamily="Courier New" FontSize="12"
                     AcceptsReturn="True"
                     Text="{Binding Header}"/>
             </TabItem>
@@ -114,7 +114,7 @@
                 <TextBox
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                     TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility ="Auto"
-                    FontFamily="Courier New" FontSize="10"
+                    FontFamily="Courier New" FontSize="12"
                     AcceptsReturn="True"
                     Text="{Binding Footer}"/>
             </TabItem>
@@ -125,7 +125,6 @@
                 <ColumnDefinition Width="*" MinWidth="100" />
                 <ColumnDefinition Width="auto" MinWidth="100" />
                 <ColumnDefinition Width="auto" MinWidth="100" />
-                <ColumnDefinition Width="auto" MinWidth="100" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Right" >Test file</TextBlock>
@@ -133,11 +132,12 @@
                  Text="{Binding Path=Testfile}"/>
             <Button Grid.Column="2" Margin="3" VerticalAlignment="Center"
                     Content="File" x:Name="TestFilePath"/>
-            <TextBlock Grid.Column="3" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"
-                       Text="{Binding GenerateTime, StringFormat={}generated at {0:HH:mm:ss}}"
-                        Foreground="{Binding GenerateForground}"/>
-            <Button Grid.Column="4" Margin="3" VerticalAlignment="Center"
+            <Button Grid.Column="3" Margin="3" VerticalAlignment="Center"
                     Content="Generate" x:Name="Generate"/>
         </Grid>
+        <TextBox Grid.Row="4" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                 FontFamily="Courier New" FontSize="12"
+                 TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility ="Auto"
+                 Text="{Binding Console}" IsReadOnly="true"/>
     </Grid>
 </Window>

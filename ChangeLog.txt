@@ -7,7 +7,7 @@ Requirement status:
  * x Implemented but partial, untested or broken.
  * v Implemented and tested.
 
-Version: 0.1.2.0, development, debug.
+Version: 0.1.3.0, development, debug.
 Requirements:
  * not yet selected.
 
@@ -54,6 +54,12 @@ For the time being, known problems are recorded here.
 
 Releases
 --------
+
+Version: 0.1.2.0, development, debug.
+Release date: 2024-10-21.
+ * Added a console at the bottom of the main form, using Log4Net for output rendering.
+ * Removed 'last time of generating' field from the main form.
+ * Described the latest changes in the documentation.
 
 Version: 0.1.1.0, development, debug.
 Release date: 2024-10-17.

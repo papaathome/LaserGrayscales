@@ -22,6 +22,7 @@ For more details see the LaserGrayscales manual.
 
 See the [full scale test script](LaserGrayscaleTest-fullscale.nc) for an example of a generated script.
 
+
 ## Related Projects
 
 See: [Laser Calibration Power vs Feedrate (For Marlin/Repetier/RepRap)](https://www.thingiverse.com/thing:3349071)
@@ -34,9 +35,28 @@ see [gnea/grbl laser mode](https://github.com/gnea/grbl/wiki/Grbl-v1.1-Laser-Mod
 Good background information on laser operations in GRBL and in general.
 
 
+## Build, test and installation of release versions.
+
+Building is done with Microsoft Visual Studio Community 2022. Testing of release versions is done on a windows 10 system and a windows 7 system.
+
+### Actions for building.
+
+Open the solution file ('.\sources\LaserGrayscales.sln') select 'Release' and then 'Rebuild'.
+The results are available in '.\sources\LaserGrayscales\bin\Release\net8.0-windows'
+
+### Actions for installing.
+
+No special actions are required. LaserGrayscales needs all files from its release directory and nothing more. You can copy the executable (and all the files and subdirectoriew with it) to any convenient location.
+
+On first startup your system might ask for a specific Microsoft Runtime system, please follow the Microsoft directions to install it.
+
+
 ## Dependencies
 
 Grayscales is realised with Visual Studio 2022 in a .NET 8 application using WPF with the help of two external packages.
+
+Building is done with Microsoft Visual Studio Community 2022 (VisualStudio.17.Release/17.11.3+35303.130).
+
 
 | NuGet package | descption |
 | ------------- | --------- |
