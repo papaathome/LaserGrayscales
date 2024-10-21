@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace As.Applications.Procedures
 {
-    public delegate void IsValidViewChanged(object sender, EventArgs e);
+    public delegate void IsValidViewChanged(object sender, ValidViewEventArgs e);
 
     public interface IViewValidInfo
     {
@@ -19,5 +19,15 @@ namespace As.Applications.Procedures
         /// Triggered direct after IsValidView is changed
         /// </summary>
         event IsValidViewChanged? OnIsValidViewChanged;
+    }
+
+    public class ValidViewEventArgs : EventArgs
+    {
+        public ValidViewEventArgs(bool valid)
+        {
+            Valid = valid;
+        }
+
+        public bool Valid { get; }
     }
 }

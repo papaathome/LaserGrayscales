@@ -27,7 +27,7 @@ namespace As.Applications
         protected override async void OnStartup(object sender, StartupEventArgs e)
         {
             await DisplayRootViewForAsync(typeof(MainViewModel));
-            UI.Debug($"Loaded: {Config.AppName}, v{Config.AppVersion}");
+            UI.InfoFormat($"Loaded: {Config.AppName}, v{Config.AppVersion}");
         }
     }
 }

@@ -53,16 +53,17 @@ namespace As.Applications.ViewModels
                 {
                     _isvalid_view = value;
                     CanGenerate = value;
-                    OnIsValidViewChanged?.Invoke(this, EventArgs.Empty);
+                    OnIsValidViewChanged?.Invoke(this, new ValidViewEventArgs(value));
                 }
             }
         }
 
         public event IsValidViewChanged? OnIsValidViewChanged;
 
-        void ValidateView()
+        void ValidateView(bool valid)
         {
             IsValidView =
+                valid && // if false it will short-circuit the rest
                 X.IsValidView &&
                 Y.IsValidView &&
                 IsValidGroupCount &&
@@ -76,8 +77,8 @@ namespace As.Applications.ViewModels
 
         public ScaleViewModel Y { get; private set; }
 
-        void OnViewValidChanged(object sender, EventArgs e)
-            => ValidateView();
+        void OnViewValidChanged(object sender, ValidViewEventArgs e)
+            => ValidateView(e.Valid);
 
         public int GroupCount
         {
@@ -101,15 +102,18 @@ namespace As.Applications.ViewModels
                 if (_isvalid_group_count != value)
                 {
                     _isvalid_group_count = value;
-                    ValidateView();
+                    ValidateView(value);
                 }
             }
         }
+
+        string _last_warning_group_count = string.Empty;
 
         string ValidateGroupCount()
         {
             var result = string.Empty;
             IsValidGroupCount = GroupCount.TryIsValidMinimum(0, ref result, open_interval: true);
+            IsValidGroupCount.CheckWarning(result, ref _last_warning_group_count);
             return result;
         }
 
@@ -135,15 +139,18 @@ namespace As.Applications.ViewModels
                 if (_isvalid_group_gap != value)
                 {
                     _isvalid_group_gap = value;
-                    ValidateView();
+                    ValidateView(value);
                 }
             }
         }
+
+        string _last_warning_group_gap = string.Empty;
 
         string ValidateGroupGap()
         {
             var result = string.Empty;
             IsValidGroupGap = GroupGap.TryIsValidMinimum(0, ref result);
+            IsValidGroupGap.CheckWarning(result, ref _last_warning_group_gap);
             return result;
         }
 
@@ -173,10 +180,12 @@ namespace As.Applications.ViewModels
                 if (_isvalid_mode != value)
                 {
                     _isvalid_mode = value;
-                    ValidateView();
+                    ValidateView(value);
                 }
             }
         }
+
+        string _last_warning_mode = string.Empty;
 
         private string ValidateGroupMode()
         {
@@ -192,6 +201,7 @@ namespace As.Applications.ViewModels
                     result = $"Group mode {SelectedGroupMode} not recognised";
                     break;
             }
+            IsValidMode.CheckWarning(result, ref _last_warning_mode);
             return result;
         }
 

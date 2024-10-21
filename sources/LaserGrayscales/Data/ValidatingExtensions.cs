@@ -1,7 +1,31 @@
-﻿namespace As.Applications.Data
+﻿using As.Applications.Loggers;
+
+namespace As.Applications.Data
 {
     internal static class ValidatingExtensions
     {
+        /// <summary>
+        /// Check and track if a warning is given, issue a warning if needed and do not repeat warnings.
+        /// </summary>
+        /// <param name="is_valid">Current state of validity</param>
+        /// <param name="warning">Current warning if validity is false</param>
+        /// <param name="last_warning">Last warning given before this one.</param>
+        static public void CheckWarning(this bool is_valid, string warning, ref string last_warning)
+        {
+            if (is_valid)
+            {
+                last_warning = string.Empty;
+            }
+            else
+            {
+                if (last_warning != warning)
+                {
+                    last_warning = warning;
+                    UI.Warn(warning);
+                }
+            }
+        }
+
         /// <summary>
         /// Check if a value is greater (or equal) than a minimum value
         /// </summary>
@@ -9,15 +33,17 @@
         /// <param name="value">Value to check</param>
         /// <param name="minimum">Minimum value</param>
         /// <param name="open_interval">true: do not alow minimum value, false: allow minimum value</param>
+        /// <param name="name">Name of the value</param>
         /// <returns>Empty if value is greater (or equal) than the minimum, errror message otherwise</returns>
         static public string ValidateMinimum<T>(
             this T value,
             T minimum,
-            bool open_interval = false)
+            bool open_interval = false,
+            string? name = null)
             where T : IComparable<T>
         {
             var result = string.Empty;
-            TryIsValidMinimum<T>(value, minimum, ref result, open_interval);
+            TryIsValidMinimum<T>(value, minimum, ref result, name, open_interval);
             return result;
         }
 
@@ -28,15 +54,17 @@
         /// <param name="value">Value to check</param>
         /// <param name="maximum">Maximum value</param>
         /// <param name="open_interval">true: do not alow maximum value, false: allow maximum value</param>
+        /// <param name="name">Name of the value</param>
         /// <returns>Empty if value is less (or equal) than the minimum, errror message otherwise</returns>
         static public string ValidateMaximum<T>(
             this T value,
             T maximum,
-            bool open_interval = false)
+            bool open_interval = false,
+            string? name = null)
             where T : IComparable<T>
         {
             var result = string.Empty;
-            TryIsValidMaximum<T>(value, maximum, ref result, open_interval);
+            TryIsValidMaximum<T>(value, maximum, ref result, name, open_interval);
             return result;
         }
 
@@ -48,16 +76,18 @@
         /// <param name="minimum">Minimum value of the range</param>
         /// <param name="maximum">Maximum value of the range</param>
         /// <param name="open_interval">true: do not alow minimum and maximum values, false: allow minimum and maximum values</param>
+        /// <param name="name">Name of the value</param>
         /// <returns>Empty if value is in range, errror message otherwise</returns>
         static public string ValidateRange<T>(
             this T value,
             T minimum,
             T maximum,
-            bool open_interval = false)
+            bool open_interval = false,
+            string? name = null)
             where T : IComparable<T>
         {
             var result = string.Empty;
-            TryIsValidRange<T>(value, minimum, maximum, ref result, open_interval);
+            TryIsValidRange<T>(value, minimum, maximum, ref result, name, open_interval);
             return result;
         }
 
@@ -70,15 +100,17 @@
         /// <param name="open_minimum_interval">true: do not alow minimum value, false: allow minimum value</param>
         /// <param name="maximum">Maximum value of the range</param>
         /// <param name="open_maximum_interval">true: do not alow maximum value, false: allow maximum value</param>
+        /// <param name="name">Name of the value</param>
         /// <returns>Empty if value is in range, errror message otherwise</returns>
         static public string ValidateRange<T>(
             this T value,
             T minimum, bool open_minimum_interval,
-            T maximum, bool open_maximum_interval)
+            T maximum, bool open_maximum_interval,
+            string? name = null)
             where T : IComparable<T>
         {
             var result = string.Empty;
-            TryIsValidRange<T>(value, minimum, open_minimum_interval, maximum, open_maximum_interval, ref result);
+            TryIsValidRange<T>(value, minimum, open_minimum_interval, maximum, open_maximum_interval, ref result, name);
             return result;
         }
 
@@ -90,6 +122,7 @@
         /// <param name="minimum">Minimum value of the range</param>
         /// <param name="maximum">Maximum value of the range</param>
         /// <param name="message">Empty if value is in range, errror message otherwise</param>
+        /// <param name="name">Name of the value</param>
         /// <param name="open_interval">true: do not alow minimum and maximum values, false: allow minimum and maximum values</param>
         /// <returns>True if value is in range, false otherwise</returns>
         static public bool TryIsValidRange<T>(
@@ -97,11 +130,12 @@
             T minimum,
             T maximum,
             ref string message,
+            string? name = null,
             bool open_interval = false)
             where T : IComparable<T>
         {
-            var result = TryIsValidMinimum(value, minimum, ref message, open_interval);
-            if (result) result = TryIsValidMaximum(value, maximum, ref message, open_interval);
+            var result = TryIsValidMinimum(value, minimum, ref message, name, open_interval);
+            if (result) result = TryIsValidMaximum(value, maximum, ref message, name, open_interval);
             return result;
         }
 
@@ -115,16 +149,18 @@
         /// <param name="maximum">Maximum value of the range</param>
         /// <param name="open_maximum_interval">true: do not alow maximum value, false: allow maximum value</param>
         /// <param name="message">Empty if value is in range, errror message otherwise</param>
+        /// <param name="name">Name of the value</param>
         /// <returns>True if value is in range, false otherwise</returns>
         static public bool TryIsValidRange<T>(
             this T value,
             T minimum, bool open_minimum_interval,
             T maximum, bool open_maximum_interval,
-            ref string message)
+            ref string message,
+            string? name = null)
             where T : IComparable<T>
         {
-            var result = TryIsValidMinimum(value, minimum, ref message, open_minimum_interval);
-            if (result) result = TryIsValidMaximum(value, maximum, ref message, open_maximum_interval);
+            var result = TryIsValidMinimum(value, minimum, ref message, name, open_minimum_interval);
+            if (result) result = TryIsValidMaximum(value, maximum, ref message, name, open_maximum_interval);
             return result;
         }
 
@@ -135,12 +171,14 @@
         /// <param name="value">Value to check</param>
         /// <param name="minimum">Minimum value</param>
         /// <param name="message">Empty if value is greater (or equal) than the minimum, errror message otherwise</param>
+        /// <param name="name">Name of the value</param>
         /// <param name="open_interval">true: do not alow minimum value, false: allow minimum value</param>
         /// <returns>True if value is greater (or equal) than the minimum, false otherwise</returns>
         static public bool TryIsValidMinimum<T>(
             this T value,
             T minimum,
             ref string message,
+            string? name = null,
             bool open_interval = false)
             where T : IComparable<T>
         {
@@ -149,9 +187,10 @@
 
             if (!result)
             {
+                name ??= "Value";
                 message = (open_interval)
-                    ? $"Value {value} is less than or equal to the minimum of {minimum}"
-                    : $"Value {value} is less than the minimum of {minimum}";
+                    ? $"{name} {value} is less than or equal to the minimum of {minimum}"
+                    : $"{name} {value} is less than the minimum of {minimum}";
             }
             return result;
         }
@@ -163,12 +202,14 @@
         /// <param name="value">Value to check</param>
         /// <param name="maximum">Maximum value</param>
         /// <param name="message">Empty if value is less (or equal) than the minimum, errror message otherwise</param>
+        /// <param name="name">Name of the value</param>
         /// <param name="open_interval">true: do not alow maximum value, false: allow maximum value</param>
         /// <returns>True if value is less (or equal) than the minimum, false otherwise</returns>
         static public bool TryIsValidMaximum<T>(
             this T value,
             T maximum,
             ref string message,
+            string? name = null,
             bool open_interval = false)
             where T : IComparable<T>
         {
@@ -177,9 +218,10 @@
 
             if (!result)
             {
+                name ??= "Value";
                 message = (open_interval)
-                    ? $"Value {value} is greater than or equal to the maximum of {maximum}"
-                    : $"Value {value} is greater than the maximum of {maximum}";
+                    ? $"{name} {value} is greater than or equal to the maximum of {maximum}"
+                    : $"{name} {value} is greater than the maximum of {maximum}";
             }
             return result;
         }

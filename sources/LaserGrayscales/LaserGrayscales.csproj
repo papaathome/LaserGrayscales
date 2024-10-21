@@ -7,7 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <RootNamespace>As.Applications</RootNamespace>
-    <Version>0.1.2.0</Version>
+    <Version>0.1.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

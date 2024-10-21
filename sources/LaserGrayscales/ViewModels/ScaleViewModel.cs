@@ -4,6 +4,7 @@ using Caliburn.Micro;
 using As.Applications.Models;
 using As.Applications.Procedures;
 using As.Applications.Data;
+using As.Applications.Loggers;
 
 namespace As.Applications.ViewModels
 {
@@ -51,16 +52,17 @@ namespace As.Applications.ViewModels
                 if (_isvalid_view != value)
                 {
                     _isvalid_view = value;
-                    OnIsValidViewChanged?.Invoke(this, EventArgs.Empty);
+                    OnIsValidViewChanged?.Invoke(this, new ValidViewEventArgs(value));
                 }
             }
         }
 
         public event IsValidViewChanged? OnIsValidViewChanged;
 
-        void ValidateView()
+        void ValidateView(bool valid)
         {
             IsValidView =
+                valid && // if false it will short-circuit the rest
                 IsValidFirst &&
                 IsValidLast &&
                 IsValidStep &&
@@ -139,16 +141,35 @@ namespace As.Applications.ViewModels
                 if (_isvalid_first != value)
                 {
                     _isvalid_first = value;
-                    ValidateView();
+                    ValidateView(value);
                 }
             }
         }
 
+        string _last_warning_first = string.Empty;
+
         string ValidateFirst()
         {
             var result = string.Empty;
-            IsValidFirst = First.TryIsValidRange(Minimum, Maximum, ref result);
+            IsValidFirst = First.TryIsValidRange(Minimum, Maximum, ref result, nameof(First));
+            IsValidFirst.CheckWarning(result, ref _last_warning_first);
             return result;
+        }
+
+        void CheckWarning(bool is_valid, ref bool is_reported, string warning)
+        {
+            if (is_valid)
+            {
+                is_reported = false;
+            }
+            else
+            {
+                if (is_reported)
+                {
+                    is_reported = true;
+                    UI.Warn(warning);
+                }
+            }
         }
 
         public int Last
@@ -173,15 +194,18 @@ namespace As.Applications.ViewModels
                 if (_isvalid_last != value)
                 {
                     _isvalid_last = value;
-                    ValidateView();
+                    ValidateView(value);
                 }
             }
         }
 
+        string _last_warning_last = string.Empty;
+
         string ValidateLast()
         {
             var result = string.Empty;
-            IsValidLast = Last.TryIsValidRange(Minimum, Maximum, ref result);
+            IsValidLast = Last.TryIsValidRange(Minimum, Maximum, ref result, nameof(Last));
+            IsValidLast.CheckWarning(result, ref _last_warning_last);
             return result;
         }
 
@@ -207,15 +231,18 @@ namespace As.Applications.ViewModels
                 if (_isvalid_step != value)
                 {
                     _isvalid_step = value;
-                    ValidateView();
+                    ValidateView(value);
                 }
             }
         }
 
+        string _last_warning_step = string.Empty;
+
         string ValidateStep()
         {
             var result = string.Empty;
-            IsValidStep = Step.TryIsValidMinimum(0, ref result, open_interval:true);
+            IsValidStep = Step.TryIsValidMinimum(0, ref result, nameof(Step), open_interval:true);
+            IsValidStep.CheckWarning(result, ref _last_warning_step);
             return result;
         }
 
@@ -241,15 +268,18 @@ namespace As.Applications.ViewModels
                 if (_isvalid_increment != value)
                 {
                     _isvalid_increment = value;
-                    ValidateView();
+                    ValidateView(value);
                 }
             }
         }
 
+        string _last_warning_increment = string.Empty;
+
         string ValidateIncrement()
         {
             var result = string.Empty;
-            IsValidIncrement = Increment.TryIsValidMinimum(0, ref result, open_interval: true);
+            IsValidIncrement = Increment.TryIsValidMinimum(0, ref result, nameof(Increment), open_interval: true);
+            IsValidIncrement.CheckWarning(result, ref _last_warning_increment);
             return result;
         }
         #endregion Data

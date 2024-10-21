@@ -6,7 +6,6 @@ using System.Xml.Serialization;
 using Caliburn.Micro;
 using As.Applications.Loggers;
 using As.Applications.Models;
-using UI = As.Applications.Loggers.UI;
 
 namespace As.Applications.Data
 {
@@ -43,24 +42,22 @@ namespace As.Applications.Data
             AppName = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name ?? Manager.APPLICATION_NAME;
             AppVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             log.InfoFormat($"Config: Load {AppName} v{AppVersion}");
-            UI.InfoFormat($"Config: Load {AppName} v{AppVersion}");
 
             AppConfig = new Config(); // just to prevent compiler nagging.
             _app_config = new Config();
 
             StoreOnExit = LoadApp() != null;
-            //Application.Current.Exit += Current_Exit;
+            Application.Current.Exit += Current_Exit;
         }
 
         /// <summary>
-        /// Application is closing, check pending AppConfig changes.
+        /// Application is closing, check pending AppConfig changes and store if required.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        static void Current_Exit(object sender, ExitEventArgs e)
+        /// <param name="_">not used</param>
+        /// <param name="__">not used</param>
+        static void Current_Exit(object _, ExitEventArgs __)
         {
-            if (StoreOnExit && AppConfigChanged) _StoreApp();
-            UI.InfoFormat($"Config: Release {AppName} v{AppVersion}");
+            if (StoreOnExit && AppConfigChanged) DoStoreApp();
             log.InfoFormat($"Config: Release {AppName} v{AppVersion}");
         }
 
@@ -103,12 +100,12 @@ namespace As.Applications.Data
         /// <returns>Application configuration if valid data was read; null otherwise</returns>
         static public Config LoadApp(string? path = null, bool create_file_if_missing = true)
         {
-            AppConfig = _LoadApp(path, create_file_if_missing);
+            AppConfig = DoLoadApp(path, create_file_if_missing);
             _app_config = new Config(AppConfig);
             return AppConfig;
         }
 
-        static Config _LoadApp(string? path = null, bool create_file_if_missing = true)
+        static Config DoLoadApp(string? path = null, bool create_file_if_missing = true)
         {
             path ??= Path.Combine(".", $"{AppName}{EXTENTION}");
             var file = new FileInfo(path);
@@ -139,12 +136,12 @@ namespace As.Applications.Data
         /// <returns>True if a valid config file is (re)written; false otherwise.</returns>
         static public bool StoreApp(string? path = null)
         {
-            var result = _StoreApp(path);
+            var result = DoStoreApp(path);
             _app_config = new Config(AppConfig);
             return result;
         }
 
-        static bool _StoreApp(string? path = null)
+        static bool DoStoreApp(string? path = null)
         {
             path ??= Path.Combine(".", $"{AppName}{EXTENTION}");
             var result = Store(path, AppConfig, noexcept: true);
