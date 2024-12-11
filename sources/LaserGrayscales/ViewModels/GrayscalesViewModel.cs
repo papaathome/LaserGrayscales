@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 
-using As.Applications.Appenders;
 using As.Applications.Config;
 using As.Applications.Data;
 using As.Applications.Data.Patterns;
@@ -14,6 +13,8 @@ using As.Applications.Validation;
 
 using Caliburn.Micro;
 
+using Microsoft.Win32;
+
 using ILogger = As.Applications.Loggers.ILogger;
 using LogManager = Caliburn.Micro.LogManager;
 
@@ -23,12 +24,14 @@ namespace As.Applications.ViewModels
     {
         static readonly ILogger Log = (ILogger)LogManager.GetLog(typeof(GrayscalesViewModel));
 
-        // TODO: validate all procedurs.
         // TODO: generate preview
+        // TODO: build pattern with operators.
 
         public GrayscalesViewModel()
         {
             _dataErrorInfo = new(this);
+
+            Console = new ConsoleViewModel();
 
             Image = new ImageViewModel();
             InnerPattern = new PatternViewModel() { Name = "Inner pattern" };
@@ -37,10 +40,9 @@ namespace As.Applications.ViewModels
             YScale = new ScaleViewModel() { Name = "Y-axis" };
 
             GCode = new GCodeViewModel() { GCode = Settings.App.GCode, KV = Settings.App.GCode.Content };
-            Machine = new MachineViewModel() { KV = Settings.App.Machine.Content };
-            App = new AppViewModel() { KV = Settings.App.Content };
-
-            UI.OnUiEventHandler += OnUiEvent;
+            Machine = new KvViewModel() { KV = Settings.App.Machine.Content };
+            App = new KvViewModel() { KV = Settings.App.Content };
+            SettingsKv = new KvViewModel() { KV = test_pattern.Content };
 
             PropertyChanged += OnPropertyChanged;
             Image.PropertyChanged += OnPropertyChanged;
@@ -53,6 +55,8 @@ namespace As.Applications.ViewModels
         }
 
         #region Properties
+        public ConsoleViewModel Console { get; private set; }
+
         public string Name
         {
             get => _name;
@@ -71,7 +75,9 @@ namespace As.Applications.ViewModels
             {
                 if (_test_pattern.Equals(value)) return;
                 _test_pattern = value;
+                SettingsKv.KV = test_pattern.Content;
                 NotifyOfPropertyChange(nameof(KV));
+                NotifyOfPropertyChange(nameof(SettingsKv));
             }
         }
         TestPattern _test_pattern = new();
@@ -90,12 +96,16 @@ namespace As.Applications.ViewModels
 
         public GCodeViewModel GCode { get; private set; }
 
-        public MachineViewModel Machine { get; private set; }
+        public KvViewModel Machine { get; private set; }
 
-        public AppViewModel App { get; private set; }
+        public KvViewModel App { get; private set; }
+
+        public KvViewModel SettingsKv { get; private set; }
         #endregion Properties
 
         #region Actions
+        public void ConsoleClear() => Console.Clear();
+
         private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
@@ -116,7 +126,6 @@ namespace As.Applications.ViewModels
 
         TestPattern GetTestPattern()
         {
-            // TODO: build with operators.
             var result = new TestPattern()
             {
                 Image = Image.GetImage(),
@@ -164,7 +173,7 @@ namespace As.Applications.ViewModels
             if (string.IsNullOrWhiteSpace(root)) root = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             var name = Name + XmlStream.EXTENSION;
 
-            Microsoft.Win32.OpenFileDialog dlg = new()
+            OpenFileDialog dlg = new()
             {
                 DefaultDirectory = root,
                 InitialDirectory = root,
@@ -192,7 +201,7 @@ namespace As.Applications.ViewModels
             if (string.IsNullOrWhiteSpace(root)) root = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             var name = Name + XmlStream.EXTENSION;
 
-            Microsoft.Win32.SaveFileDialog dlg = new()
+            SaveFileDialog dlg = new()
             {
                 DefaultDirectory = root,
                 InitialDirectory = root,
@@ -247,7 +256,7 @@ namespace As.Applications.ViewModels
                     var name = Path.GetFileName(p.FilePath);
                     if (Path.GetExtension(name) == "") name += Plotter.EXTENSION;
 
-                    Microsoft.Win32.SaveFileDialog dlg = new()
+                    SaveFileDialog dlg = new()
                     {
                         DefaultDirectory = root,
                         InitialDirectory = root,
@@ -309,39 +318,6 @@ namespace As.Applications.ViewModels
 
         public void ButtonE() { }
         #endregion Actions.
-
-        #region Console
-        string _console = string.Empty;
-        public string Console
-        {
-            get { return _console; }
-            set
-            {
-                if (_console != value)
-                {
-                    _console = value;
-                    NotifyOfPropertyChange(nameof(Console));
-                }
-            }
-        }
-
-        void OnUiEvent(object? sender, MessageLoggedEventArgs e)
-            => ConsoleWriteln(e.RenderedLoggingEvent);
-
-        void ConsoleWriteln(string message)
-        {
-            if (string.IsNullOrEmpty(Console))
-            {
-                Console = message;
-            }
-            else
-            {
-                Console += Environment.NewLine + message;
-            }
-        }
-
-        public void ConsoleClear() => Console = string.Empty;
-        #endregion Console
 
         #region IDataErrorInfo
         /// <inheritdoc/>

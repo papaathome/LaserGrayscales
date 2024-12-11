@@ -99,6 +99,7 @@
                 </Grid.ColumnDefinitions>
                 <TextBox
                     Grid.Column="0" Margin="3,0,36,0" VerticalAlignment="Center"
+                    IsEnabled="{Binding Path=CanLinesPerCm}"
                     Text="{Binding Path=LinesPerCm,
                     Converter={StaticResource ConverterToDoubleCi}, ConverterParameter=0.###,
                     UpdateSourceTrigger=LostFocus,
@@ -110,13 +111,18 @@
             <TextBlock Grid.Row="2" Grid.Column="0" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Right" >Image file</TextBlock>
             <Grid Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="95*" />
+                    <ColumnDefinition Width="4*"/>
                     <ColumnDefinition Width="auto" MinWidth="66" />
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" Margin="3" VerticalAlignment="Center" 
-                     Text="{Binding Path=ImagePath}"/>
-                <Button  Grid.Column="1" Margin="3" VerticalAlignment="Center" Content="File"
-                     x:Name="SelectImagePath"/>
+                <TextBox
+                    Grid.Column="0" Margin="3,0,3,0" 
+                    IsEnabled="{Binding Path=CanImagePath}"
+                    Text="{Binding Path=ImagePath}" Grid.ColumnSpan="2"/>
+                <Button
+                    Grid.Column="2" Margin="3,0,3,0" VerticalAlignment="Center" Content="File"
+                    IsEnabled="{Binding Path=CanSelectImagePath}"
+                    x:Name="SelectImagePath"/>
             </Grid>
         </Grid>
     </GroupBox>

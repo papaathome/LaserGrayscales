@@ -6,6 +6,7 @@ using Caliburn.Micro;
 using As.Applications.Validation;
 using As.Applications.Data.Images;
 using As.Applications.Config;
+using Microsoft.Win32;
 
 namespace As.Applications.ViewModels
 {
@@ -25,7 +26,7 @@ namespace As.Applications.ViewModels
             ImageType.Line,
             ImageType.Box,
             ImageType.Square,
-            //ImageType.Card
+            //ImageType.Card not yet available.
         ];
 
         /// <summary>
@@ -40,7 +41,9 @@ namespace As.Applications.ViewModels
                 {
                     NotifyOfPropertyChange(nameof(HaveDescription));
                     NotifyOfPropertyChange(nameof(Description));
+                    NotifyOfPropertyChange(nameof(LinesPerCm));
                     NotifyOfPropertyChange(nameof(CanLinesPerCm));
+                    NotifyOfPropertyChange(nameof(ImagePath));
                     NotifyOfPropertyChange(nameof(CanImagePath));
                     NotifyOfPropertyChange(nameof(CanSelectImagePath));
                 }
@@ -76,7 +79,7 @@ namespace As.Applications.ViewModels
         double _height = 0.001f;
 
         /// <summary>
-        /// For image type Square only: number of lines in lines per cm.
+        /// For image type Square and Card only: number of lines in lines per cm.
         /// </summary>
         public double LinesPerCm
         {
@@ -85,7 +88,9 @@ namespace As.Applications.ViewModels
         }
         double _lines_per_cm = 20;
 
-        public bool CanLinesPerCm => CurrentImage == ImageType.Square;
+        public bool CanLinesPerCm =>
+            CurrentImage == ImageType.Square ||
+            CurrentImage == ImageType.Card;
 
         /// <summary>
         /// For image type Card only: path to image file.
@@ -97,7 +102,7 @@ namespace As.Applications.ViewModels
         }
         string _image_path = "";
 
-        public bool CanImagePath => false; // CurrentImage == ImageType.Card;
+        public bool CanImagePath => CurrentImage == ImageType.Card;
         #endregion Properties
 
         #region Actions
@@ -106,7 +111,7 @@ namespace As.Applications.ViewModels
         /// </summary>
         public void SelectImagePath()
         {
-            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog
+            SaveFileDialog dlg = new SaveFileDialog
             {
                 FileName = ImagePath,
                 DefaultExt = Path.GetExtension(ImagePath) ?? ".bmp",
@@ -131,25 +136,31 @@ namespace As.Applications.ViewModels
                     {
                         Width = Width,
                         Height = Height,
+                        LinesPerCm = 20,
+                        ImagePath = "",
                     };
                 case ImageType.Box:
                     return new Box()
                     {
                         Width = Width,
                         Height = Height,
+                        LinesPerCm = 20,
+                        ImagePath = "",
                     };
                 case ImageType.Square:
                     return new Square()
                     {
                         Width = Width,
                         Height = Height,
-                        LinesPerCm = LinesPerCm
+                        LinesPerCm = LinesPerCm,
+                        ImagePath = "",
                     };
                 case ImageType.Card:
                     return new Card()
                     {
                         Width = Width,
                         Height = Height,
+                        LinesPerCm = LinesPerCm,
                         ImagePath = ImagePath,
                     };
                 default:
@@ -166,12 +177,16 @@ namespace As.Applications.ViewModels
                     CurrentImage = ImageType.Line;
                     Width = line.Width;
                     Height = line.Height;
+                    LinesPerCm = 20;
+                    ImagePath = "";
                     break;
                 case "Box":
                     var box = (image as Box) ?? throw new ConfigException($"bug: SetImage fail, can not casst image type; image type = \"{image.GetType().Name}\"");
                     CurrentImage = ImageType.Box;
                     Width = box.Width;
                     Height = box.Height;
+                    LinesPerCm = 20;
+                    ImagePath = "";
                     break;
                 case "Square":
                     var square = (image as Square) ?? throw new ConfigException($"bug: SetImage fail, can not casst image type; image type = \"{image.GetType().Name}\"");
@@ -179,12 +194,14 @@ namespace As.Applications.ViewModels
                     Width = square.Width;
                     Height = square.Height;
                     LinesPerCm = square.LinesPerCm;
+                    ImagePath = "";
                     break;
                 case "Card":
                     var card = (image as Card) ?? throw new ConfigException($"bug: SetImage fail, can not casst image type; image type = \"{image.GetType().Name}\"");
                     CurrentImage = ImageType.Card;
                     Width = card.Width;
                     Height = card.Height;
+                    LinesPerCm = card.LinesPerCm;
                     ImagePath = card.ImagePath;
                     break;
                 default:

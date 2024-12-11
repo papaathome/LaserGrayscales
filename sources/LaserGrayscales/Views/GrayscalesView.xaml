@@ -98,38 +98,7 @@
                             <local:ImageView DataContext="{Binding Image}"/>
                         </TabItem>
                         <TabItem Header="Settings">
-                            <Grid>
-                                <DataGrid ItemsSource="{Binding KV}" AutoGenerateColumns="False">
-                                    <DataGrid.Columns>
-                                        <DataGridTemplateColumn Header="Key" MinWidth="100">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Key}" />
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTemplateColumn Header="Value" MinWidth="100">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Value}" />
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                            <DataGridTemplateColumn.CellEditingTemplate>
-                                                <DataTemplate>
-                                                    <TextBox Text="{Binding Value}" />
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellEditingTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTemplateColumn Header="Comments" Width="*">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Comment}" />
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
+                            <local:KvView DataContext="{Binding SettingsKv}"/>
                         </TabItem>
                     </TabControl>
                 </TabItem>
@@ -137,10 +106,10 @@
                     <local:GCodeView DataContext="{Binding GCode}"/>
                 </TabItem>
                 <TabItem Header="Machine limits" HorizontalAlignment="Stretch">
-                    <local:MachineView DataContext="{Binding Machine}"/>
+                    <local:KvView DataContext="{Binding Machine}"/>
                 </TabItem>
                 <TabItem Header="Application" HorizontalAlignment="Stretch">
-                    <local:MachineView DataContext="{Binding App}"/>
+                    <local:KvView DataContext="{Binding App}"/>
                 </TabItem>
             </TabControl>
             <Grid Grid.Row="1" HorizontalAlignment="Stretch">
@@ -168,11 +137,7 @@
                     Grid.Column="5" Margin="3" Height="20" Width="60"
                     Content="Generate" x:Name="Generate" />
             </Grid>
-            <TextBox Grid.Row="2"
-                Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                FontFamily="Courier New" FontSize="12"
-                TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility ="Auto"
-                Text="{Binding Console}" IsReadOnly="true"/>
+            <local:ConsoleView Grid.Row="2" DataContext="{Binding Console}"/>
             <!--
             <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Stretch">
                 <Button Margin="3" Height="20" Width="60" Content="A" x:Name="ButtonA"/>

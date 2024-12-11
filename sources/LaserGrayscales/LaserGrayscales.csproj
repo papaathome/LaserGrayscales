@@ -17,13 +17,19 @@
     <Compile Remove="Data\XParser.cs" />
     <Compile Remove="Loggers\DebugLogger.cs" />
     <Compile Remove="Validation\DomainAttribute.cs" />
+    <Compile Remove="ViewModels\AppViewModel.cs" />
+    <Compile Remove="ViewModels\MachineViewModel.cs" />
     <Compile Remove="ViewModels\MainViewModel.cs" />
     <Compile Remove="ViewModels\SliderScaleViewModel.cs" />
+    <Compile Remove="Views\AppView.xaml.cs" />
+    <Compile Remove="Views\MachineView.xaml.cs" />
     <Compile Remove="Views\MainView.xaml.cs" />
     <Compile Remove="Views\SliderScaleView.xaml.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <Page Remove="Views\AppView.xaml" />
+    <Page Remove="Views\MachineView.xaml" />
     <Page Remove="Views\MainView.xaml" />
     <Page Remove="Views\SliderScaleView.xaml" />
   </ItemGroup>

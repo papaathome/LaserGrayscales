@@ -3,20 +3,20 @@
 
 Generate gray scales in G-code for CNC laser engravers, c# vs2022, .NET 8 WPF application.
 
-Laser engraving as function of X and Y where one axis is changing speed and the other is changing laser power.
+Laser engraving as function of X and Y while changing Z-height, speed and laser power for test and check purposes.
 
-A full documentation of LaserGrayscales is not yet available. This introduction will explain the basics but not with all details.
+Full documentation of LaserGrayscales [available]({LaserGrayscales.pdf). This introduction will explain some basics, for full details see the documentation.
 
 **Warning**: Generating a test script does imply that a file is generated. It does **not** imply that a _valid_ file is generated. Always check the content of a generated test script before you run it! Remember, LaserGrayscales is still in beta versions.
 
 <p align="center">
-  <img alt="LaserGrayscales started" src=".\bootscreen.png">
+  <img alt="LaserGrayscales started" src=".\source\images\Grayscales-v0.1.3.png">
 </p>
 
 
 ## Introduction.
 
-LaserGrayscales is a tool to test the effects of your laser at power levels 1 through 255 at speeds ranging from 1 mm/s to 70 mm/s or 60 mm/min to 4200 mm/min. This is a good way to see how your laser will react to different materials at different speeds and power levels.
+LaserGrayscales is a tool to test the effects of your laser at power levels 1 through 255 at speeds ranging from 1 mm/s to 70 mm/s or 60 mm/min to 4200 mm/min (the values mentioned here are configurable). This is a good way to see how your laser will react to different materials at different speeds and power levels.
 
 While it is possible to generate test code for each step, in power and speed, this will generate a file of about 16 KB, using an area of 28 by 14 cm (11 by 5 1/2 inch) and a run time of about one hour.
 
@@ -24,32 +24,51 @@ Another approach is to generate an general overview in large steps to find corse
 
 With LaserGrayscales both approaches are possible.
 
-LaserGrayscales was started 'out of necessity' of having no proper test tools for a new laser engraver tool. On the internet a [g-code script](https://www.thingiverse.com/thing:3349071) is available but its use of g-code is targeting different elements of the industry standard RS274 format than what was acceptable for some g-code interpreter. Changing the script manually was time consuming and just for one script where more testing is required.
+LaserGrayscales was started 'out of necessity' of having no proper test tools (and not finding any) for a new laser engraver tool. On the internet a [g-code script](https://www.thingiverse.com/thing:3349071) is available but its use of g-code is targeting different elements of the industry standard RS274 format than what was acceptable for some g-code interpreter. Changing the script manually was time consuming and just for one script where more testing is required.
+
+
+## Properties
+
+* Can draw lines, (empty) boxed and (grey level filled) squares.
+* Can draw in any size and repeat in any quantity (in a 'x by y' rectangular form).
+* Can line up dawings next to each other or in groups.
+* Can vary Z height, speed and laser power for each dawing.
+* Can create test patterns in g-code conforming to RS274D
+* Will save the g-code at any location.
+* Will check that used g-code is within limits of target CNC machine capabilities.
+* Will load a default test setting at program start.
+* Will create default configuration files if none are found.
+* Will save changed settings on program close.
+* Can save and load test settings at any time to any location.
+* Independent configuration for target CNC machine.
+* Independent configuration for target G-Code interpreter.
+* Independent configuration for a test.
+* Independent configurations can quickly be combined for other targets 
 
 
 ### How it works.
 
-Groups of parallel lines are drawn with variations in laser power and speed. The lines are drawn in the Y direction while being parallel in the X direction.
+For a full explanation see the documentation.
 
-Variation in the X direction can be in laser power or in speed mode, variation in Y direction is then for speed or power mode (the mode not used on the X direction).
+Groups of parallel lines are drawn with variations in laser power and speed. The lines are drawn in the X direction while being parallel in the Y direction.
 
-The lines in the Y direction are divided up in steps, the step length and in mode increment (or decrement) is configurable as well as the starting value and the ending value mode. The starting value, ending value and mode increment determines how many steps are taken.
+Variation in the X and Y direction can be in laser power, speed and heigth, the variations in each direction are added together for each variable.
 
-The laser is on continuesly while traversing over one Y line and off whel traveling to the next Y line.
+The laser is continuesly on while traversing over one X line and off while traveling to the next X line.
 
-The lines ar grouped in the X direction with a configurable width between each line. The number of lines in one group is configurable and between each group there is a configurable gap. The value for the mode in X direction for the first line and the last line and the increment is configurable. The value of the first and last line and the increment determines how many lines are drawn.
+The lines are grouped in the Y direction with a configurable width between each line. The number of lines in one group is configurable and between each group there is a configurable gap.
 
-Starting and ending values of each mode are limited to a (configurable) minimum and maximum, defaults for Laser Power is 0 to 255 and for speed 1 to 70 mm/sec.
+Starting and ending values of each mode are limited to a (configurable) minimum and maximum, defaults for Laser Power is 0 to 255, speed 1 to 70 mm/sec. Height is by default constant but it is possible to change that as well.
 
-The starting value can be less than or greater than the ending value, the generated g-code is moving from start value to end value with the increments.
+The starting value can be less than or greater than the ending value, the generated g-code is moving from start value to end value with constant increments.
 
-A script intro, header and footer in G-Code can be added to the generated code.
+The user supplied script intro, header and footer is added to the G-Code.
 
-The code is using the X direction in the main g-code body with a macro call for each line in the Y direction. The macro call is not using explicit arguments. This results in far less g-code than generating all lines in one body.
+The generated code is for UCCNC but with the use of 'standard' G-Codes. The default header explain all code used for managing the laser equipment.
 
-The generated code is for UCCNC but with the use of 'standard' G-Codes. The default header explain all code used for calling the macro and managing the laser equipment.
+All configuration and the last settings used are available in configuration files. Editing these files with a simple text editor is possible but not needed. All values can be edited in the various tabs.
 
-All configuration and the last settings used are available in one XML file. Editing this file with a simple text editor is possible but not recomended.
+A separate configuration file is used for the target machine, the target G-Code interpreter, the specific test and the application.
 
 
 ## The test script
@@ -57,177 +76,74 @@ All configuration and the last settings used are available in one XML file. Edit
 A test script file contains several sections:
  - An intro (including a remark with which version of LaserGrayscale the script was generated).
  - A header for preparing script settings.
- - The body of the scipt, this contains G-code for X-axis movements.
+ - The body of the scipt, this contains G-code for all engraving.
  - A footer for terminating the script.
- - A subroutine, this contains G-code for Y-axis movements.
 
 Code is generated with clear comments. It should be relative easy to follow what is done if you understand the basic G-code syntax.
 
-### Example snippets from `LaserGrayscaleTest-fullscale.nc`.
+### Example snippet from generated g-code.
 ```
-( This file is generated by LaserGrayscales v0.1.0.0 at 2024-10-12 23:10 )
+( This file is generated with LaserGrayscales, v0.3.0.0, 2024-12-13 09:54:20 )
+( GCode using UCCNC conventions or RS-274 interpretation )
 ( Test and check the content before you use it. Use at your own risk, protect your eyes! )
 
 ( This file will test the effect of your laser at power levels 1 through 255 at speeds ranging from 1 mm/s to 70 mm/s or 60 mm/min to 4200 mm/min. )
 ( This is a good way to see how your laser will react to different materials at different speeds & power levels. )
 
 (   >>> ALWAYS WEAR PROPER EYE PROTECTION WHEN WORKING WITH LASERS <<<   )
-...
-( This test uses X from 0 to 153.6 and Y from 0 to 140 )
 
+( Metric: all GCode lengths in 'mm' and speeds in 'mm/min' )
+
+...
+
+( TestPatternSquarse4x4 uses X from 0 to 4.5 mm and Y from 0 to 4.5 mm )
+
+G90                      ( absolute positions )
+M3                       ( laser enabled )
 ( Header start )
-G90    ( absolute positions )
-M3     ( Laser operation enabled )
-M10 Q0 ( Laser on, power 0 )
 ( Header end )
 
-       ( X Outer loop: scale Power;  X = 0 - 153.6;  Q = 255 - 0, step 1 in max Watt:256 )
-M10 Q0 ( Enable laser, power 0 )
-G00 X0 Y0 F4200 ( go home )
-M10 Q255
-M98 P100 L1
 M10 Q0
-G00 X0.5 Y0 F4200
-M10 Q254
-M98 P100 L1
+G0 X0 Y0 F2400           ( To outer pattern part #x=1, #y=1 )
+M10 Q100
+G1 X2 Z0 F1200
+G1 Y2
+G1 X0
+G1 Y0
+M10 Q0
+G0 Y0.5
+M10 Q100
+G1 X2
+M10 Q0
+G0 X0
+G0 Y1
 ...
+M10 Q120
+G1 X4.5
 M10 Q0
-G00 X152.3 Y0 F4200
+G0 X2.5
+G0 Y3.5
+M10 Q120
+G1 X4.5
 M10 Q0
-M98 P100 L1
+G0 X2.5
+G0 Y4
+M10 Q120
+G1 X4.5
 M10 Q0
-G00 X153.6 Y0 F4200
-
+G0 X2.5
+M11                      ( laser off )
+M5                       ( laser disabled )
 ( Footer )
-M11    ( Laser off )
-M5     ( Laser operation disabled )
 G0 X0 Y0 Z0 ( go home )
 M30    ( Program end, rewind )
 ( Footer end )
-
-O100   ( subroutine begin label 100, run one line from current point. )
-       ( Y Inner loop: scale Speed;  Y = 0 - 140;  F = 60 - 4200, step 60 in mm/min )
-G1 Y2 F60
-G1 Y4 F120
-G1 Y6 F180
-...
-G1 Y136 F4080
-G1 Y138 F4140
-G1 Y140 F4200
-M99    ( return, subroutine label 100 end )
 ```
 
 
 ## Text and buttons.
 
-
-<p align="center">
-  <img alt="LaserGrayscales started" src=".\bootscreen.png">
-</p>
-
-
-From top to bottom you will find the following sections on the main form.
-
-- Y-axis, internal loop.
-- X-axis, external loop.
-- Tabs for intro, header and footer.
-- Line for generating test script files.
-- Console like block for progress reportings.
-
-### Axis configuration.
-
-Y-axis and X-axis configuration are identical with the exception for mode and grouping details which are only available for the X-axis.
-
-Details:
-- First + slider: The starting value, may be less, equal or greater than the ending value.
-- Last + slider:  The starting value, may be less, equal or greater than the starting value.
-- Step: step size used for moving from First to Last, the sign for the step is changed as required when generating the script to move into the Last direction.
-- Increment: Distance in mm on the axis for the step to take.
-
-First, Last en Step are in laser power units (Watt:256) or in speed units (mm/sec).
-
-The X-asis has the following additional settings.
-
-- Mode: (Laser) Power or Speed. Selecting a mode for the X-axis forces the Y-axis in using the other mode.
-- Group gap: distance in mm between groups of lines.
-- Group count: number of lines in one group.
-
-
-### Tabs for Intro, header and footer.
-
-Three tabs with free text. The text in each tab is verbatim copied to the script.
-
-### Line for generating test script files.
-
-- Test file path: any path to a location and filename for the test script file to generate.
-- Button 'File': A 'save files' browser is opened to select a new output file path.
-- Button 'Generate': The test file is generated on pushing this button.
-
-On clicking 'Generate' progress is reported in the console block below.
-
-### Console block.
-
-Used to report all progress and problems.
-
-## The configuration file.
-
-The configuration file is written in XML and there should be no need to manually change it, with one exception.
-
-On starting the program the configuration is loaded. If no file is found a file with default settings is generated. On stopping the program any changes in the settings are written to the configuration file. Any change in settings is persistant over running and stopping the program.
-
-The file include absolute minimum and maximum values for laser power and speeds. The default values are 0 to 255 (in parts of 1/256th of max watt for laser power and 1 to 70 mm/sec for speed.
-
-The minimum and maximum values are enforced on all values used by the script generator. Any value less or greater are replaced by the minimum or maximum value which wil result in clipping at these specific points.
-
-The root node of the configuration file has the following nodes (required and in the specified order).
- - power_minimum for minimum laser power
- - power_maximum for maximum laser power
- - speed_minimum for minimum speed
- - speed_maximum for maximum speed
- - grayscale for all grayscale settings on the XY field.
- - test_script
-
-The grayscale node contains all details for values you see on the main form that are needed for generating the test script. Names and values are very much alike the names and values as explained in the 'text and buttons' sections. The details are not repeated here.
-
-```
-<root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="0.1.0">
-  <power_minimum>0</power_minimum>
-  <power_maximum>255</power_maximum>
-  <speed_minimum>1</speed_minimum>
-  <speed_maximum>70</speed_maximum>
-  <grayscale>
-    <y_scale first="1" last="70" step="1" increment="2" />
-    <x_scale first="255" last="0" step="1" increment="0.5" />
-    <x_group_count>16</x_group_count>
-    <x_group_gap>0.8</x_group_gap>
-    <x_group_mode>Power</x_group_mode>
-    <intro>
-      <line>( This file will test the effect of your laser at power levels 1 through 255 at speeds ranging from 1 mm/s to 70 mm/s or 60 mm/min to 4200 mm/min. )</line>
-      <line>( This is a good way to see how your laser will react to different materials at different speeds &amp; power levels. )</line>
-      <line />
-      <line>(   &gt;&gt;&gt; ALWAYS WEAR PROPER EYE PROTECTION WHEN WORKING WITH LASERS &lt;&lt;&lt;   )</line>
-      <line />
-      ...
-    </intro>
-    <header>
-      <line>( Header start )</line>
-      <line>G90    ( absolute positions )</line>
-      <line>M3     ( Laser operation enabled )</line>
-      <line>M10 Q0 ( Laser on, power 0 )</line>
-      <line>( Header end )</line>
-    </header>
-    <footer>
-      <line>( Footer )</line>
-      <line>M11    ( Laser off )</line>
-      <line>M5     ( Laser operation disabled )</line>
-      <line>G0 X0 Y0 Z0 ( go home )</line>
-      <line>M30    ( Program end, rewind )</line>
-      <line>( Footer end )</line>
-    </footer>
-  </grayscale>
-  <test_script>.\LaserGrayscaleTest.nc</test_script>
-</root>
-```
+One screen provides all text and buttons. The screen uses several tabs to arrange data in sensible groups of settings. Each tab, text and button is explained in the documentation.
 
 
 ## Logging.

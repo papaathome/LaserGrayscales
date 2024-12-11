@@ -4,6 +4,12 @@ namespace As.Applications.ViewModels
 {
     class GCodeViewModel : KvViewModel
     {
+        public GCodeViewModel()
+        {
+            // Can't use this.KV, not yet initialised.
+            GCodeKv = new KvViewModel() { KV = Settings.App.GCode.Content };
+        }
+
         #region Properties
         public required GCodeSettings GCode
         {
@@ -34,6 +40,8 @@ namespace As.Applications.ViewModels
             get => GCode.Footer;
             set => GCode.Footer = value;
         }
+
+        public KvViewModel GCodeKv { get; private set; }
         #endregion Properties
 
         #region Actions

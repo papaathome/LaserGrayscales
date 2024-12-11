@@ -39,6 +39,7 @@ In the following paragraphs there screens are explained:
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{./images/Grayscales-v0.1.3.png}
+    \caption{The startup screen}
 \end{figure}
 
 This is the first screen you see when starting up. The top part has a tab selection for `Test Pattern', `GCode', `Machine limits' and `Application'. All these tabs
@@ -65,6 +66,7 @@ The row of buttons include (from left to righ).
 %\begin{figure}[h!]
 %    \centering
 %    \includegraphics[width=0.8\linewidth]{./images/Generating.png}
+%    \caption{The test pattern tab and generator sub tab}
 %\end{figure}
 
 This is the tab where the layout of a test pattern is configured. It has a sub tab for generator settings, two sub tabs for operations on the image (in this version
@@ -82,6 +84,7 @@ is replaced by the machine maximum value.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{./images/Generator.png}
+    \caption{The test pattern generator sub tab}
 \end{figure}
 
 The `Generator' sub tab is for setting values that are used for generating the test pattern. It has three parts.
@@ -113,6 +116,7 @@ The field `Pattern' is used as the base name for the test pattern file generated
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{./images/Operation1.png}
+    \caption{The test pattern Op \#\ sub tabs}
 \end{figure}
 
 The `Op 2' and `Op 1' tabs are identical again. Each one specifies a grouping operation in the X and Y direction. `Op 2' is applied before generating and after `Op 1'.
@@ -129,6 +133,7 @@ See \nameref{TestPatternGeneratorTab} for some examples on how to group images. 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{./images/Image.png}
+    \caption{The test pattern Image sub tab}
 \end{figure}
 
 In this tab the actual Image to draw in each copy is specified. A few settings are in use for it. An image is always a rectangular shape with a width and a height.
@@ -149,6 +154,7 @@ Each shape or `Mode' is designed to test some specific properties of the machine
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{./images/Settings.png}
+    \caption{The test pattern settings sub tab}
 \end{figure}
 
 For the test pattern one setting is available. That is the speed (in mm/sec) available for `G0' gcode move actions. This value is limited by the GCode minimum and maximum settings,
@@ -158,6 +164,7 @@ see \nameref{GCodeSettingsTab}
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{./images/GCode-Settings.png}
+    \caption{The GCode settings sub tab}
 \end{figure}
 
 With the `GCode' tab you can specifiy all gcode specific settings depending on your gcode interpreter, that is `actual code' to use and the Intro/Header/Footer to use with
@@ -173,6 +180,7 @@ not subject to the settings here. The purpose of the GCode in the configuration 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{./images/GCode-Intro.png}
+    \caption{The GCode Intro, Header and Footer sub tabs}
 \end{figure}
 
 The tree sub tabs `Into', `Header' and `Footer' are identical. The first is used as an intro in the script generated where the second and last are used
@@ -184,6 +192,7 @@ as header and footer for the actions part. Each tab is free text which is copied
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{./images/Machine-limits.png}
+    \caption{The machine settings tab}
 \end{figure}
 
 The `Machine limits' tab specifies all minimum and maximum allowed values for variables used while generating a test script. This tab give you the possibility to generate
@@ -194,6 +203,7 @@ for more information.
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\linewidth]{./images/Application.png}
+    \caption{The application settings tab}
 \end{figure}
 
 The `Application' tab binds a number of items for use in the application. In general it specifies how much information to generate or where to find what kind of information.

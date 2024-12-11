@@ -23,7 +23,6 @@ namespace As.Applications.ViewModels
         }
         string _name = "";
 
-        #region X axis pattern.
         /// <summary>
         /// X-gap in mm, space between two images, greater or equal to 0
         /// </summary>
@@ -43,9 +42,7 @@ namespace As.Applications.ViewModels
             set { Set(ref _xcount, value, value.ValidateMinimum(1)); }
         }
         int _xcount = 1;
-        #endregion X axis pattern.
 
-        #region Y axis pattern.
         /// <summary>
         /// Y-gap in mm, space between two images, greater or equal to 0
         /// </summary>
@@ -65,7 +62,6 @@ namespace As.Applications.ViewModels
             set { Set(ref _ycount, value, value.ValidateMinimum(1)); }
         }
         int _ycount = 1;
-        #endregion Y axis pattern.
         #endregion Properties
 
         #region Actions

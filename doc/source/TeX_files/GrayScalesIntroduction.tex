@@ -17,9 +17,25 @@ for speed, laser power and Z height. You can plot an image `X' one time then cha
 and plot it again (and again). \GS\ let you plot a line of images `X' `X'... `X' and specify
 a different setting for each image. And it can do that for multiple lines. You also have
 control over the amount white space between images and lines and between group of
-images and group of lines.
+images and group of lines. The idea of the grouping is that you more easily can identify which
+setters are used
 
-The `image' can be as simple as one straight line, a box (without any filling in it), a square
+This will result in a grid with groups of images, e.g.: groups of items where
+each item is a group of 2 by 2, with indexing numbers for each image X. (any configuration is possiblev)
+\[
+\begin{array}{llllllll}
+    X_{1,m}   & X_{2,m}   &   & X_{3,m}   & X_{4,m}   & \dots  & X_{n\mhyphen 1,m}   & X_{n,m}\\
+    X_{1,m\mhyphen 1} & X_{2,m\mhyphen 1} &   & X_{3,m\mhyphen 1} & X_{4,m\mhyphen 1} & \dots  & X_{n\mhyphen 1,m\mhyphen 1} & X_{n,m\mhyphen 1}\\
+    \vdots    & \vdots    &   & \vdots    & \vdots    & \iddots & \vdots      & \vdots   \\
+    X_{1,4}   & X_{2,4}   &   & X_{3,4}   & X_{4,4}   & \dots  & X_{n\mhyphen 1,4}   & X_{n,4}\\
+    X_{1,3}   & X_{2,3}   &   & X_{3,3}   & X_{4,3}   & \dots  & X_{n\mhyphen 1,3}   & X_{n,3}\\
+              &           &   &           &           &        &             &          \\
+    X_{1,2}   & X_{2,2}   &   & X_{3,2}   & X_{4,2}   & \dots  & X_{n\mhyphen 1,2}   & X_{n,2}\\
+    X_{1,1}   & X_{2,1}   &   & X_{3,1}   & X_{4,1}   & \dots  & X_{n\mhyphen 1,1}   & X_{n,1}\\
+\end{array}
+\]
+
+The `image' X can be as simple as one straight line, a box (without any filling in it), a square
 with an uniform grey filling or an image from file (yet to be implemented).
 
 This allow you to make a crude first try to look for the sweet spot you need and then

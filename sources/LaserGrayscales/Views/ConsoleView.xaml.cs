@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace As.Applications.Views
 {
     /// <summary>
-    /// Interaction logic for MachineView.xaml
+    /// Interaction logic for ConsoleView.xaml
     /// </summary>
-    public partial class MachineView : UserControl
+    public partial class ConsoleView : UserControl
     {
-        public MachineView()
+        public ConsoleView()
         {
             InitializeComponent();
         }

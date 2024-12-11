@@ -22,6 +22,8 @@ Requirements:
  * v Set comment mode using ';' or '(' and ')' (or any other required code)
  * v Multiple forms/tabs for settings.
  * v Can set Z height.
+ * v Issues tracking done on GitView
+ * v Can load/store different configurations.
 
 Version: 0.5.0.0, development, debug.
 Version 0.6.0.0, development release.
@@ -30,10 +32,8 @@ Requirements:
 
 version: x.y.0.0, wishlist.
  * ? Add unit testing.
- * ? Add issues tracking tool.
  * ? Icon for Grayscales.
  * ? Can swap X and Y axis.
- * ? load/store different configurations (technically possible but not easy to use).
  * ? Set F scale in mm/sec or mm/min (GUI only)
  * ? Set (0, 0) location.
  * ? Report min/max at design time in GUI (now reporting at generation time).

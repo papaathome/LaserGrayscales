@@ -8,14 +8,23 @@ using Caliburn.Micro;
 
 namespace As.Applications.ViewModels
 {
-    abstract class KvViewModel : Screen, IDataErrorInfo
+    internal class KvViewModel : Screen, IDataErrorInfo
     {
         public KvViewModel()
         {
             _dataErrorInfo = new(this);
         }
 
-        public required ObservableCollection<KVPair> KV { get; set; }
+        public required ObservableCollection<KVPair> KV
+        {
+            get => _kv;
+            set
+            {
+                _kv = value;
+                NotifyOfPropertyChange();
+            }
+        }
+        ObservableCollection<KVPair> _kv = new ObservableCollection<KVPair>();
 
         #region IDataErrorInfo
         readonly DataErrorInfo _dataErrorInfo;

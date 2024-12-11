@@ -9,36 +9,7 @@
     <Grid>
         <TabControl Grid.Row="0" Margin="3" HorizontalAlignment="Stretch">
             <TabItem Header="Settings" HorizontalAlignment="Stretch">
-                <DataGrid ItemsSource="{Binding KV}" AutoGenerateColumns="False">
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="Key" MinWidth="100">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Key}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Value" MinWidth="100">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Value, ValidatesOnDataErrors=True}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                            <DataGridTemplateColumn.CellEditingTemplate>
-                                <DataTemplate>
-                                    <TextBox Text="{Binding Value, ValidatesOnDataErrors=True}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Comments" Width="*">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Comment}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                <local:KvView DataContext="{Binding GCodeKv}"/>
             </TabItem>
             <TabItem Header="Intro" HorizontalAlignment="Stretch">
                 <TextBox

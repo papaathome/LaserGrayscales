@@ -1,9 +1,12 @@
+% using LuaLaTex
+
 %\documentclass[a4paper,12pt,twoside,draft]{book}
 \documentclass[a4paper,10pt,oneside]{book}
 \usepackage[nokeyprefix]{refstyle}
 \usepackage[toc,page]{appendix}
 \usepackage[fleqn]{amsmath}
-\usepackage[utf8]{inputenc}
+\usepackage{mathdots}
+%\usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{makeidx}
 \usepackage[nounderscore]{syntax}
@@ -11,6 +14,13 @@
 \usepackage[pdfpagelabels=true,plainpages=false,hyperfootnotes=false]{hyperref} % last package!
 
 % On Fingures and floats see: https://en.wikibooks.org/wiki/LaTeX/Floats,_Figures_and_Captions
+
+% TeXstudio: This comment block is for TeXstudio users only, it is not essential for building the documentation and provides a way to copy the pdf to a more convenient location.
+% TeXstudio: see: https://tex.stackexchange.com/questions/187672/path-for-saving-pdf-in-texstudio
+% TeXstudio: This only works if
+%            1) you are using TeXstudio
+%            2) have added the user command [copyPdf:Copy Pdf][cmd /C copy %.pdf ..] in Options -> Config TeXstudio -> Build -> User Commands (with command detaild for windows).
+% TeXstudio: To copy pdf result to target location use Tools -> User -> Copy Pdf
 
 \newcommand{\GS}{LaserGrayscales}
 \author{A.H.M. Steenveld.}
@@ -23,21 +33,22 @@
 }
 \date{November 2024}
 
-\newcommand{\Warning}[1]{\textbf{Warning}: \emph{#1}}
-\newcommand{\WarningCheckAndTest}{\Warning{Always test and check a script before using it.}}
-
 \bibliographystyle{plainnat}
 
-\parindent=0pc			    % Do not indent the start of a paragraph.
+\newcommand{\Warning}[1]{\begin{quote}\textbf{Warning}: \emph{#1}\end{quote}}
+\newcommand{\WarningCheckAndTest}{\Warning{Always test and check a script before using it.}}
+
+\mathchardef\mhyphen="2D
+
+%\parindent=0pc			    % Do not indent the start of a paragraph.
+%\setlength{\parskip}{1pc}	% Put an empty line between paragraphs.
 \flushbottom				% Size all pages to the same length.
-\setlength{\parskip}{1pc}	% Put an empty line between paragraphs.
 
 % syntax setting.
 \setlength{\grammarindent}{7.5em}
 \newcommand{\grammarltgt}[1]{\textless#1\textgreater}
 \newcommand{\grammarnl}{\grammarltgt{newline}}
 
-%\makeindex[intoc]
 \makeindex\pagestyle{empty}
 \begin{document}
     \maketitle\frontmatter\maketitle%
