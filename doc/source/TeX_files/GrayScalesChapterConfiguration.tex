@@ -1,0 +1,79 @@
+\chapter{Configuration}\label{Configuration}
+
+The configuration\index{configuration} is done with a number files, one for test settings, one for machine settings
+one for GCode settings and a general one for the application.
+The files are normally located in `.\textbackslash' and are named
+`testsettings.xml'\index{configuration!testsettings}\index{testsettings|see {configuration}},
+`machinesettings.xml'\index{configuration!machinesettings}\index{machinesettings|see {configuration}} and
+`gcodesettings.xml'\index{configuration!gcodesettings}\index{gcodesettings|see {configuration}}.
+The files are readable text file (XML format) and can be looked into but it is not intended for editing.
+
+\section{Testsettings}\index{configuration!testsettings|textbf}
+This configuration file contains all default settings for a new test pattern.
+
+\begin{tabular}{lrl}
+    Name    & Default   & Description\\
+    verbose & false     & if true add extra comments on the console output\\
+    power minimum &   0 & default minimum laser power\\
+    power maximum & 255 & default maximum laser power\\
+    speed minimum &   1 & default minimum speed in mm/sec\\
+    speed maximum &  70 & default maximum speed in mm/sec\\
+    intro   &     GCode & default user intro section\\
+    header  &     GCode & default user header section\\
+    footer  &     GCode & default user footer section\\
+    test script &  path & default path for test file\\
+\end{tabular}
+
+\section{Machine settings}\index{configuration!machinesettings|textbf}
+This configuration file contains all machine capabilities that must be taken into account.
+One is needed for validating all calculated values\index{calculated value}.
+
+\begin{tabular}{lrl}
+    Name      & Default          & Description\\
+    name      & Stepcraft D3.600 & Machine name and type\\
+    x minimum &                0 & minimum x value, mm in machine coordinates\\
+    x maximum &              417 & maximum x value, mm in machine coordinated\\
+    y minimum &                0 & minimum y value, mm in machine coordinates\\
+    y maximum &              596 & maximum y value, mm in machine coordinated\\
+    z minimum &             -132 & minimum z value, mm in machine coordinates\\
+    z maximum &                0 & maximum z value, mm in machine coordinated\\
+    speed G0 minimum &         0 & minimum speed for G0 traveling, mm/sec\\
+    speed G0 maximum &        70 & maximum speed for G0 traveling, mm/sec\\
+    speed minimum &            0 & minimum speed for G1, mm/sec\\
+    speed maximum &           70 & maximum speed for G1, mm/sec\\
+    power minimum &            0 & minimum laser power, parts $100\%/255$\\
+    power maximum &          255 & maximum laser power, parts $100\%/255$\\
+\end{tabular}
+
+\section{GCode settings}\index{configuration!gcodesettings|textbf}
+This configuration file contains all capabilities of the CCode interpreter.
+One is needed for generating\index{operation!generator} the correct G-code.
+
+\begin{tabular}{lrl}
+    Name          & Default & Description\\
+    name          &   UCCNC & Name of the G-code interpreter\\
+    comment open  &       ( & Comment open character\\
+    comment close &       ) & Comment close character (if empty: end of line)\\
+    double format &   0.000 & floating point format\\
+    info column   &      25 & Comment column on lines combining GCode with comment\\
+    laser enable  &      M3 & GCode to enable laser equipment\\
+    laser disable &      M5 & GCode to disable laser equipment\\
+    laser on      &     M10 & GCode to switch the laser on\\
+    laser off     &     M11 & GCode to switch the laser off\\
+    laser power   &       Q & GCOde to set laser power\\
+\end{tabular}
+
+\section{Application settings}\index{configuration!application settings|textbf}
+This configuration file binds all information from several sources together. The default paths are relative against the executable location.
+
+\begin{tabular}{lrl}
+    Name          & Default & Description\\
+    Verbose       & false   & True: more information on screen and in test script\\
+    Debug         & false   & True: debug mode, specific information for debugging\\
+    BuildArea     & .\textbackslash{}build\textbackslash{} & Location for temporary files while building a test script\\
+    ConfigArea    & .\textbackslash{}config\textbackslash{} & Location for configuration files\\
+    MachineSettingsFileName & machinesettings.xml & Name of machine configuration file\\
+    GCodeSettingsFileName & gcodesettings.xml & Name of gcode configuration file\\
+    AutoLoadTestpatternPath & .\textbackslash{}TestPattern.xml & Default test to load (if available)\\
+    TestscriptPath & .\textbackslash{}LaserGrayscaleTest.nc & Default location for the test scrip\\
+\end{tabular}

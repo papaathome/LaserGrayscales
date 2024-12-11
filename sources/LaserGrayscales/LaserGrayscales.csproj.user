@@ -7,7 +7,22 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Views\MainView.xaml.cs">
+    <Compile Update="Views\AppView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\GCodeView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\GrayscalesView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\ImageView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\MachineView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Views\PatternView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Views\ScaleView.xaml.cs">
@@ -15,7 +30,22 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Views\MainView.xaml">
+    <Page Update="Views\AppView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\GCodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\GrayscalesView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\ImageView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\MachineView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\PatternView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Views\ScaleView.xaml">

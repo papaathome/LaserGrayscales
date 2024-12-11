@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using log4net.Core;
+﻿using log4net.Core;
 
 namespace As.Applications.Appenders
 {
@@ -22,8 +16,7 @@ namespace As.Applications.Appenders
         /// <inheritdoc/>
         public FireEventAppender() : base()
         {
-            Instance = this; // Store the instance created
-            //ActivateOptions();
+            Instance = this;
         }
 
         /// <summary>

@@ -1,0 +1,186 @@
+﻿<Window x:Class="As.Applications.Views.GrayscalesView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:As.Applications.Views"
+        xmlns:viewmodels="clr-namespace:As.Applications.ViewModels"
+        xmlns:data="clr-namespace:As.Applications.Converters"
+        d:DataContext="{d:DesignInstance Type=viewmodels:GrayscalesViewModel}"
+        mc:Ignorable="d"
+        Title="Grayscales"
+        SizeToContent="Height" Width="720" >
+    <Window.Resources>
+        <ResourceDictionary>
+            <data:ConverterToIntCi x:Key="ConverterToIntCi" />
+            <data:ConverterToDoubleCi x:Key="ConverterToDoubleCi" />
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="3" />
+                <Setter Property="Validation.ErrorTemplate">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <DockPanel LastChildFill="true">
+                                <Border 
+                                    Background="Red" DockPanel.Dock="Right" Margin="5,0,6,0" Width="20" Height="20" CornerRadius="10"
+                                    ToolTip="{Binding ElementName=CustomAdorner, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}">
+                                    <TextBlock Text="!" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Foreground="White" />
+                                </Border>
+                                <AdornedElementPlaceholder Name="CustomAdorner" VerticalAlignment="Center" >
+                                    <Border BorderBrush="Red" BorderThickness="1" />
+                                </AdornedElementPlaceholder>
+                            </DockPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" MaxWidth="325" />
+            <ColumnDefinition Width="*" MinWidth="695" />
+        </Grid.ColumnDefinitions>
+        <Image
+            Grid.Column="0" Margin="3" MaxHeight="550" HorizontalAlignment="Center" VerticalAlignment="Center"
+            Stretch="Uniform"
+            Source="../Burnscales.jpg" />
+        <Grid Grid.Column="1" Margin="3" HorizontalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="300" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" MinHeight="75" />
+                <RowDefinition Height="auto" MaxHeight="30" />
+            </Grid.RowDefinitions>
+            <TabControl Grid.Row="0" Margin="3" HorizontalAlignment="Stretch">
+                <TabItem Header="Test Pattern" HorizontalAlignment="Stretch">
+                    <TabControl Margin="3">
+                        <TabItem Header="Generator">
+                            <StackPanel>
+                                <Grid Margin="8,3,11,3">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <local:ScaleView Grid.Row="0" DataContext="{Binding XScale}"/>
+                                    <local:ScaleView Grid.Row="1" DataContext="{Binding YScale}"/>
+                                    <Grid Grid.Row="3" Margin="8,3,11,3">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="66" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Right" >Pattern</TextBlock>
+                                        <Grid Grid.Row="0" Grid.Column="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" MinWidth="100" />
+                                                <ColumnDefinition Width="auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox
+                                                Grid.Column="0" Margin="3,0,36,0" VerticalAlignment="Center"
+                                                Text="{Binding Path=Name,
+                                                UpdateSourceTrigger=LostFocus,
+                                                ValidatesOnDataErrors=true,
+                                                NotifyOnValidationError=true}"/>
+                                            <TextBlock Grid.Column="1" Margin="-33,0,3,0" VerticalAlignment="Center" Text=""/>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="Op 2">
+                            <local:PatternView DataContext="{Binding OuterPattern}"/>
+                        </TabItem>
+                        <TabItem Header="Op 1">
+                            <local:PatternView DataContext="{Binding InnerPattern}"/>
+                        </TabItem>
+                        <TabItem Header="Image">
+                            <local:ImageView DataContext="{Binding Image}"/>
+                        </TabItem>
+                        <TabItem Header="Settings">
+                            <Grid>
+                                <DataGrid ItemsSource="{Binding KV}" AutoGenerateColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="Key" MinWidth="100">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Key}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="Value" MinWidth="100">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Value}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                            <DataGridTemplateColumn.CellEditingTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Text="{Binding Value}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellEditingTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="Comments" Width="*">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding Comment}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </TabItem>
+                <TabItem Header="GCode" HorizontalAlignment="Stretch">
+                    <local:GCodeView DataContext="{Binding GCode}"/>
+                </TabItem>
+                <TabItem Header="Machine limits" HorizontalAlignment="Stretch">
+                    <local:MachineView DataContext="{Binding Machine}"/>
+                </TabItem>
+                <TabItem Header="Application" HorizontalAlignment="Stretch">
+                    <local:MachineView DataContext="{Binding App}"/>
+                </TabItem>
+            </TabControl>
+            <Grid Grid.Row="1" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Button
+                    Grid.Column="0" Margin="3" Height="20" Width="60"
+                    Content="Clear" x:Name="ConsoleClear" />
+                <Button
+                    Grid.Column="2" Margin="3" Height="20" Width="60"
+                    Content="Load" x:Name="Load" />
+                <Button
+                    Grid.Column="3" Margin="3" Height="20" Width="60"
+                    Content="Save" x:Name="Save" />
+                <Button
+                    Grid.Column="4" Margin="3" Height="20" Width="60"
+                    Content="Preview" x:Name="Preview" />
+                <Button
+                    Grid.Column="5" Margin="3" Height="20" Width="60"
+                    Content="Generate" x:Name="Generate" />
+            </Grid>
+            <TextBox Grid.Row="2"
+                Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                FontFamily="Courier New" FontSize="12"
+                TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility ="Auto"
+                Text="{Binding Console}" IsReadOnly="true"/>
+            <!--
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <Button Margin="3" Height="20" Width="60" Content="A" x:Name="ButtonA"/>
+                <Button Margin="3" Height="20" Width="60" Content="B" x:Name="ButtonB"/>
+                <Button Margin="3" Height="20" Width="60" Content="C" x:Name="ButtonC"/>
+                <Button Margin="3" Height="20" Width="60" Content="D" x:Name="ButtonD"/>
+            </StackPanel>
+            -->
+        </Grid>
+    </Grid>
+</Window>

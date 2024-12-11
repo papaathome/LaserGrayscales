@@ -1,0 +1,27 @@
+\chapter{Introduction}\label{Introduction}
+
+\GS\ is a tool to test the effects of your laser at power levels 1 through 255 and
+at speeds ranging from 1 mm/s to 70 mm/s or 60 mm/min to 4200 mm/min and different
+Z heights. This is a good way to see how your laser will react to different materials
+at different speeds and power levels.
+
+\GS\ was started `out of necessity' of having no proper test tools for a new laser
+engraver tool. On the internet a \href{https://www.thingiverse.com/thing:3349071}{g-code script}
+is available but its use of g-code is targeting different elements of the industry
+standard RS274 format than what was acceptable for the g-code interpreter with my machine.
+Changing the script manually was time consuming and just for one script where more testing
+is required.
+
+\GS\ works on the idea that you want to display the same image using different settings
+for speed, laser power and Z height. You can plot an image `X' one time then change the settings
+and plot it again (and again). \GS\ let you plot a line of images `X' `X'... `X' and specify
+a different setting for each image. And it can do that for multiple lines. You also have
+control over the amount white space between images and lines and between group of
+images and group of lines.
+
+The `image' can be as simple as one straight line, a box (without any filling in it), a square
+with an uniform grey filling or an image from file (yet to be implemented).
+
+This allow you to make a crude first try to look for the sweet spot you need and then
+to refine limiting the range and making smaller steps to find the best settings for your
+application.

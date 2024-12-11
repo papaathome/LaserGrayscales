@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace As.Applications.Views
 {
     /// <summary>
-    /// Interaction logic for PlaylistView.xaml
+    /// Interaction logic for ScaleView.xaml
     /// </summary>
     public partial class ScaleView : UserControl
     {

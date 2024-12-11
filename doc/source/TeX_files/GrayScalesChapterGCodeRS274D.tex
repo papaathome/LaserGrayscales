@@ -1,0 +1,118 @@
+\chapter{G-Code and RS274-D}\label{GCodeAndRs274D}
+
+G-Code and its use did not just happen `at once', Wikipedia have an informative page about \href{https://en.wikipedia.org/wiki/G-code}{G-code}
+and the phrase \emph{`G-code has many variants'} in the first paragraph informs you that there is much to say
+about it. The G-code that your machine is using might be a slightly different variation to the G-code that your
+tool is generating (and \GS\ for that). In this chapter the general structure and some of the differences and pitfalls are discussed.
+
+The RS274-D\index{RS274-D}\ document was approved in feb 1979 by the `Electronic Industries Association' (EIA)\index{EIA}.
+Unfortunately a few subjects are mentioned but not defined or explained. Some subjects, such as a subroutine mechanism,
+are not mentioned explicitly and industry is using a `post processing' phase to handle specific manufactured specifics.
+By now the RS274-D has 40 years of history and still is the document referred to for G-Code compliance.
+
+The following information about the RS274 is \emph{informative only} to give some additional insights in the use
+of G-code and should not be used for design decisions. The ultimate source of information for such decisions is
+the documentation with the equipment/software processing the actual G-Code.
+
+\section{G-Code data structure}
+G-code can be preceded with a line ending with a 'Start of Program'\index{Start of Program} or
+'\%'\index{\%|see {Start of Program}} character.
+This character can appear only once, at the end of the line. No lines preceding the line with 'Start of Program' are allowed.
+
+G-code is defined as variable blocks of data with a `End of Block' (EOB) marker. Notably, the first block\index{block} should
+be preceded by a EOB marker. Each block is a variable number of words. `End of Block' is a \grammarnl.
+
+Words\index{word} are the actual G-code items you can recognise such as `G0', `X 123' and alike. The length (in characters) is
+not fixed and there are several groups such as `Dimensional words', `Non-dimensional words' and subgroups.
+
+The state machine handling blocks of date will, for words not sent in a block, substitute the value from the previous
+block e.g: The state machine on processing block `G1 X1, Y2' will move to x=1 and y=2. On the next block `G1 Y3' the
+state machine will substitute the value of 1 for x and move to x=1 and y=3.
+
+The thing to remember is that a block of G-code words is one line of text e.g.: `G90\grammarnl' or
+`G00~X0~Y0~F4200\grammarnl' are two blocks and each one is a set of words applied at the same time.
+
+Also whitespace (spaces, tabs) have no meaning and nothing is said about lower case or upper case.
+`g0\textvisiblespace{}x\textvisiblespace{}+0.0\textvisiblespace{}y\textvisiblespace{}+0.0\textvisiblespace{}f\textvisiblespace{}4200\grammarnl'
+is identical to `G00X0000Y0000F4200\grammarnl'. Whitespace is used only for readability, numeric value specifications allow
+for leading and trailing zero's (for dimensional values).
+
+Comment\index{comment} text in G-Code is not explicit provided for in the RS274 except for a few odd remarks without
+further explanations.
+
+The character `)'\index{comment!)}\index{)|see {comment}} is defined as `Control In' and
+`('\index{comment!(}\index{(|see {comment}} is defined as
+`Control Out'. What the exact function is of these two is not explained but the general interpretation looks to be
+`On Control In all following input characters is forwarded to the state machine handling blocks of data' and
+`On Control Out all following input characters up to the next newline or On Control In character is ignored and not
+forwarded to the state machine'. Effectively, any text between `(' and `)' (or the next \grammarnl) is ignored giving one
+way of adding comments to a G-code file.
+
+The character `\slash'\index{comment!\slash}\index{\slash|see {comment}} is defined as `Block Deleter (slash)' and
+can appear as the first (non-white) character on a line. It is intended to quickly disable blocks without removing it. Effectively, any line starting with `\slash' is not processed giving another way of adding comment to a G-code file.
+
+The character `!'\index{comment!$^^21$}\index{$^^21$|see {comment}} is used as `Start of Comment' by some C-Code interpreters. The RS274 does not
+mention this character.
+
+This depend on how the g-code interpreter is reading the file, test before you use it.
+
+\section{Backus-Naur form}
+This section can be skipped, it provides a more strict definition of G-code but does not introduce anything new to
+the previous section. A more formal notation of the G-Code data in
+\href{https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form}{Backus-Naur form} is given below. It does not represent
+all the details in RS274 because it is composed without the use or Backus-Naur forms in mind making it hard to capture
+some details.
+
+All dimensional words (see below) should appear `in order'. That is not covered in the description below, other than
+a remark, to keep the description reasonable short. Words of any type shall only appear once in a block. This is not
+reflected in the grammar below, it will complicate the grammar considerable. Also the fact that missing words are
+allowed in which case the state machine is substituting the value from the previous block is not represented  to keep
+the grammar short and readable.
+\begin{grammar}
+    <gcode>      ::= <prog start> <EOB> <blocks>
+
+    <prog start> ::= <empty> \textbar\ <any> <SOP>
+
+    <blocks>     ::= <empty> \textbar\ <block> <blocks>
+
+    <block> ::= <N word>\index{block}\\
+                     <G words>\\
+                     <dimension words>\\
+                     <interpolation parameter words>\\
+                     <F word>\\
+                     <S word>\\
+                     <T word>\\
+                     <M words>\\
+                     <EOB>
+
+    <N word>     ::= `N' INTEGER\index{word}
+
+    <G words>    ::= <empty> \textbar\ `G' <word part> <G words>
+
+    <dimension word> ::= <dimension address> <value> <optional F word>
+
+    <dimension address> ::= ~\\`X'\textbar `Y'\textbar `Z'\textbar `U'\textbar `V'\textbar `W'\textbar `P'\textbar `Q'\textbar `R'\textbar `A'\textbar `B'\textbar `C'\textbar `D'\textbar `E' \\// appearing in this order.
+
+    <interpolation parameter words> ::= <interpolation address> <word part>
+
+    <S word> ::= `S' <word part>
+
+    <T word> ::= `T' <word part> <optional D word>
+
+    <F word>     ::= `F' <value>
+
+    <M words>    ::= <empty> \textbar\ `M' <word part> <M words>
+
+
+    <value>      ::= REAL \textbar\ INTEGER
+
+    <word part>  ::= <sequence number> <preparatory function number>
+
+
+    <any>    ::= [\^{}\%\textbackslash n]*
+
+    <SOP>    ::= `\%'
+
+    <EOB>    ::= `\textbackslash n'
+\end{grammar}
+

@@ -1,287 +1,137 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+using As.Applications.Data.Scales;
+using As.Applications.Validation;
 
 using Caliburn.Micro;
-using As.Applications.Models;
-using As.Applications.Procedures;
-using As.Applications.Data;
-using As.Applications.Loggers;
 
 namespace As.Applications.ViewModels
 {
-    internal class ScaleViewModel : Screen, IDataErrorInfo, IViewValidInfo
+    public class ScaleViewModel : Screen, IDataErrorInfo
     {
-        public ScaleViewModel(Scale scale, Mode mode)
+        public ScaleViewModel()
         {
-            Scale = scale;
-            Mode = mode;
-
-            ValidateFirst();
-            ValidateLast();
-            ValidateStep();
-            ValidateIncrement();
+            _dataErrorInfo = new(this);
         }
 
-        readonly Scale Scale;
+        #region Properties
+        public string Name 
+        {
+            get => _name;
+            set => Set(ref _name, value);
+        }
+        string _name = "";
+
+        public int PowerMinimum
+        {
+            get => _power_minimum;
+            set => Set(ref _power_minimum, value, value.ValidateRange(0, 255));
+        }
+        int _power_minimum = 0;
+
+        public int PowerMaximum
+        {
+            get => _power_maximum;
+            set => Set(ref _power_maximum, value, value.ValidateRange(0, 255));
+        }
+        int _power_maximum = 0;
+
+        public double SpeedMinimum
+        {
+            get => _speed_minimum;
+            set => Set(ref _speed_minimum, value, value.ValidateMinimum(0));
+        }
+        double _speed_minimum = 0.001;
+
+        public double SpeedMaximum
+        {
+            get => _speed_maximum;
+            set => Set(ref _speed_maximum, value, value.ValidateMinimum(0));
+        }
+        double _speed_maximum = 0.001;
+
+        public double HeightMinimum
+        {
+            get => _height_minimum;
+            set => Set(ref _height_minimum, value, value.ValidateMinimum(0));
+        }
+        double _height_minimum = 0;
+
+        public double HeightMaximum
+        {
+            get => _height_maximum;
+            set => Set(ref _height_maximum, value, value.ValidateMinimum(0));
+        }
+        double _height_maximum = 0;
+        #endregion Properties
+
+        #region Actions
+        public Scale<int> GetPowerScale()
+        {
+            return new Scale<int>()
+            {
+                Minimum = PowerMinimum,
+                Maximum = PowerMaximum
+            };
+        }
+
+        public void SetPowerScale(Scale<int> value)
+        {
+            PowerMinimum = value.Minimum;
+            PowerMaximum = value.Maximum;
+        }
+
+        public Scale<double> GetSpeedScale()
+        {
+            return new Scale<double>()
+            {
+                Minimum = SpeedMinimum,
+                Maximum = SpeedMaximum
+            };
+        }
+
+        public void SetSpeedScale(Scale<double> value)
+        {
+            SpeedMinimum = value.Minimum;
+            SpeedMaximum = value.Maximum;
+        }
+
+        public Scale<double> GetHeightScale()
+        {
+            return new Scale<double>()
+            {
+                Minimum = HeightMinimum,
+                Maximum = HeightMaximum
+            };
+        }
+
+        public void SetHeightScale(Scale<double> value)
+        {
+            HeightMinimum = value.Minimum;
+            HeightMaximum = value.Maximum;
+        }
+        #endregion Actions
 
         #region IDataErrorInfo
-        public string Error => string.Empty;
+        readonly DataErrorInfo _dataErrorInfo;
 
-        public string this[string item]
-        {
-            get
-            {
-                return item switch
-                {
-                    nameof(First) => ValidateFirst(),
-                    nameof(Last) => ValidateLast(),
-                    nameof(Step) => ValidateStep(),
-                    nameof(Increment) => ValidateIncrement(),
-                    _ => string.Empty,
-                };
-            }
-        }
-        #endregion IDataErrorInfo
+        /// <inheritdoc/>
+        public string Error => _dataErrorInfo.Error;
 
-        #region IViewValidInfo
-        bool _isvalid_view = false;
-        public bool IsValidView
+        /// <inheritdoc/>
+        public string this[string propertyName]
         {
-            get { return _isvalid_view; }
-            private set
-            {
-                if (_isvalid_view != value)
-                {
-                    _isvalid_view = value;
-                    OnIsValidViewChanged?.Invoke(this, new ValidViewEventArgs(value));
-                }
-            }
+            get => _dataErrorInfo[propertyName];
+            internal set => _dataErrorInfo[propertyName] = value;
         }
 
-        public event IsValidViewChanged? OnIsValidViewChanged;
-
-        void ValidateView(bool valid)
+        internal bool Set<T>(ref T lvalue, T value, string? error = null, [CallerMemberName] string propertyName = "") where T : IEquatable<T>
         {
-            IsValidView =
-                valid && // if false it will short-circuit the rest
-                IsValidFirst &&
-                IsValidLast &&
-                IsValidStep &&
-                IsValidIncrement;
+            if (!_dataErrorInfo.TrySet(ref lvalue, value, error, propertyName: propertyName)) return false;
+            NotifyOfPropertyChange(propertyName);
+            return true;
         }
-        #endregion IViewValidInfo
-
-        #region Data
-        Mode _mode;
-        public Mode Mode
-        {
-            get => _mode;
-            set
-            {
-                if (_mode != value)
-                {
-                    _mode = value;
-                    NotifyOfPropertyChange(nameof(Mode));
-                    Minimum = value.Minimum();
-                    Maximum = value.Maximum();
-                }
-            }
-        }
-
-        int _minimum = 0;
-        public int Minimum
-        {
-            get { return _minimum; }
-            set
-            {
-                if (_minimum != value)
-                {
-                    _minimum = value;
-                    NotifyOfPropertyChange(nameof(Minimum));
-                    NotifyOfPropertyChange(nameof(First));
-                    NotifyOfPropertyChange(nameof(Last));
-                }
-            }
-        }
-
-        int _maxmimum = 100;
-        public int Maximum
-        {
-            get { return _maxmimum; }
-            set
-            {
-                if (_minimum != value)
-                {
-                    _maxmimum = value;
-                    NotifyOfPropertyChange(nameof(Maximum));
-                    NotifyOfPropertyChange(nameof(First));
-                    NotifyOfPropertyChange(nameof(Last));
-                }
-            }
-        }
-
-        public int First
-        {
-            get => Scale.First;
-            set
-            {
-                if (Scale.First != value)
-                {
-                    Scale.First = value;
-                    NotifyOfPropertyChange(nameof(First));
-                }
-            }
-        }
-
-        bool _isvalid_first = false;
-        bool IsValidFirst
-        {
-            get { return _isvalid_first; }
-            set
-            {
-                if (_isvalid_first != value)
-                {
-                    _isvalid_first = value;
-                    ValidateView(value);
-                }
-            }
-        }
-
-        string _last_warning_first = string.Empty;
-
-        string ValidateFirst()
-        {
-            var result = string.Empty;
-            IsValidFirst = First.TryIsValidRange(Minimum, Maximum, ref result, nameof(First));
-            IsValidFirst.CheckWarning(result, ref _last_warning_first);
-            return result;
-        }
-
-        void CheckWarning(bool is_valid, ref bool is_reported, string warning)
-        {
-            if (is_valid)
-            {
-                is_reported = false;
-            }
-            else
-            {
-                if (is_reported)
-                {
-                    is_reported = true;
-                    UI.Warn(warning);
-                }
-            }
-        }
-
-        public int Last
-        {
-            get => Scale.Last;
-            set
-            {
-                if (Scale.Last != value)
-                {
-                    Scale.Last = value;
-                    NotifyOfPropertyChange(nameof(Last));
-                }
-            }
-        }
-
-        bool _isvalid_last = false;
-        bool IsValidLast
-        {
-            get { return _isvalid_last; }
-            set
-            {
-                if (_isvalid_last != value)
-                {
-                    _isvalid_last = value;
-                    ValidateView(value);
-                }
-            }
-        }
-
-        string _last_warning_last = string.Empty;
-
-        string ValidateLast()
-        {
-            var result = string.Empty;
-            IsValidLast = Last.TryIsValidRange(Minimum, Maximum, ref result, nameof(Last));
-            IsValidLast.CheckWarning(result, ref _last_warning_last);
-            return result;
-        }
-
-        public int Step
-        {
-            get => Scale.Step;
-            set
-            {
-                if (Scale.Step != value)
-                {
-                    Scale.Step = value;
-                    NotifyOfPropertyChange(nameof(Step));
-                }
-            }
-        }
-
-        bool _isvalid_step = false;
-        bool IsValidStep
-        {
-            get { return _isvalid_step; }
-            set
-            {
-                if (_isvalid_step != value)
-                {
-                    _isvalid_step = value;
-                    ValidateView(value);
-                }
-            }
-        }
-
-        string _last_warning_step = string.Empty;
-
-        string ValidateStep()
-        {
-            var result = string.Empty;
-            IsValidStep = Step.TryIsValidMinimum(0, ref result, nameof(Step), open_interval:true);
-            IsValidStep.CheckWarning(result, ref _last_warning_step);
-            return result;
-        }
-
-        public double Increment
-        {
-            get => Scale.Increment;
-            set
-            {
-                if (Scale.Increment != value)
-                {
-                    Scale.Increment = value;
-                    NotifyOfPropertyChange(nameof(Increment));
-                }
-            }
-        }
-
-        bool _isvalid_increment = false;
-        bool IsValidIncrement
-        {
-            get { return _isvalid_increment; }
-            set
-            {
-                if (_isvalid_increment != value)
-                {
-                    _isvalid_increment = value;
-                    ValidateView(value);
-                }
-            }
-        }
-
-        string _last_warning_increment = string.Empty;
-
-        string ValidateIncrement()
-        {
-            var result = string.Empty;
-            IsValidIncrement = Increment.TryIsValidMinimum(0, ref result, nameof(Increment), open_interval: true);
-            IsValidIncrement.CheckWarning(result, ref _last_warning_increment);
-            return result;
-        }
-        #endregion Data
+        #endregion
     }
 }

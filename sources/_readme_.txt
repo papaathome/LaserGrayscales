@@ -6,37 +6,22 @@ Version:
 
 The current version number is set in LaserGrayscales.csproj, node Project.PropertyGroup.Version
 
-The config class/file has a File Version number set in Config.FILE_VERSION
-
-Format for both version numbers is 'major.minor.build.bugfix'
+Format for the version number is 'major.minor.build.bugfix'
 The major number is incremented on new functiontionality or large changeover.
 The minor number is incremented (in steps of 2) on breaking changes, even numbers are release versions, odd numbers are debug versions.
 The build number is incremented on changes not adding new functionality (e.g. on optimising performance.)
 The bugfix number is incremented on bugfixes.
 
-Development path:
-----------------
-
-Version 0.2x+1.0.0, development, debug
-Version 0.2x.0.0, development, release
-
-Version 1.2x+1.0.0, stable, debug
-Version 1.2x.0.0, stable, release
-
-See release log for more details.
-
 
 Implementation details:
 ----------------------
 
-The Config class is the central object with all grayscale and application details.
+The Settings class is the central object with all grayscale and application details or references to other configuration classes. Settings are loader on program start and saved (if changed) on program exit.
 
-The Manager class is for coordinating actions. With this rather simple appliction there is not much in it.
+The Plotter class is responsible for generating a test script based on configuration details. It is responsible for executing all operations on an image in the right order in with the right context.
 
-The TestModel class is responsible for generating a test script based on configuration details.
+Configuration details and plotter actions are separated over several partial class files.
 
-The main screen is driving all actions on user input.
+The main screen is driving all actions by user input, no scripting or unattended mode available.
 
-On application close the configuration is stored it if changes are made to it.
-
-The debug log is (in my oppinion) fouled up by caliburn.micro log messages. The actual messages are writen at level 'Info' but with the CmLog4NetLogger class degraded to level 'Debug'. For normal logging use Log4Net ILogger InfoFormat(...), in general use the *Format(...) items from the ILogger API.
+On application close configuration files are stored if changes are made to it.

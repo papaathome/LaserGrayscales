@@ -1,0 +1,277 @@
+\chapter{Principles of operation}\label{PrinciplesOfOperation}
+
+The program can be used to generate test patterns to find the sweet spot of operations for a particular image on some
+material. It is also possible to create test patterns for testing the CNC hardware or the laser equipment up to a point.
+
+To get the maximum out of \GS\ it helps to understand how it works. Not in terms of buttons and values but in how it was
+designed and how information is used to produce test patterns.
+
+The program applies a number op operations on an initial image\index{image}\index{image!initial}.
+Each operation\index{operation} generates a new image. The last operation is producing G-Code for a test pattern.
+Operations before that may apply a repeat pattern on the image or put a border around the image. It will be relatively
+easy to implement a new operation at a later time.
+
+For a first version of \GS\ a limited number of operations in a fixed order will be available. Giving the user more
+flexibility in the order of applying operations is for a future version. The same for the initial images, a limited
+number of initial images will be available. In future versions more types of images will become available.
+
+There are a number of arguments that can be changed during the test, collectively called the
+`{arguments under test}'\index{argument under test}.
+When generating a test a original image\index{image!original} is repeated a number of times and each image will use
+different and specific values for the arguments under test. Available for arguments under test are Z
+height\index{argument under test!Z height}, speed\index{argument under test!speed} and
+laser power\index{argument under test!power}.
+
+\section{Design requirements}
+A number of requirements were formed early for \GS.
+\begin{itemize}
+    \item Test patterns must always operate within target machine capabilities.
+    \item Designing a test pattern must be possible for many G-Code consumers, not for just one machine or manufacturer.
+    \item Produced G-Code must be minimal and adhere as much as possible to RS274-D.
+    \item Generating G-Code must be  as fast as possible (in seconds, not in minutes).
+    \item New users must be able to construct a test pattern safely without much concerns about how to use the program
+          (low learning curve, result examples) but not hinder the experienced user (efficient user input).
+    \item While configuring a test pattern it must give an indication where target machine capabilities are
+          causing clipping of arguments under test on the image.
+    \item While configuring a test pattern it must immediately indicate its size in x and y directions.
+    \item While configuring a test pattern it must give a run time indication.
+    \item The start point of a test pattern is an image to be realised with some arguments under test.
+    \item Arguments under test include:
+          \begin{itemize}
+              \item Z height while engraving (for `out of focus' effects).
+              \item Speed while engraving (for speed versus power effects).
+              \item Intensity of laser while engraving (for speed versus power effects).
+          \end{itemize}
+    \item A number of operations must be available on the image including:
+          \begin{itemize}
+              \item Limits operator: All values used by the (final) image are within the capabilities range of the
+                    target machine all the time.
+              \item Pattern operator: The (final) image must be repeated first in X direction and then in Y direction.
+              \item Border operator: The (final) image is given a border with some raster information.
+              \item Rotation operator: The (final) image can be rotated  over any angle.
+              \item Translation operator: The (final) image can be moved to any position
+          \end{itemize}
+    \item Operations must be repeatable e.g.: applying the Pattern operator twice will create an outer pattern over
+          an inner pattern over an image.
+\end{itemize}
+
+\section{Images}
+There is an image\index{image|textbf} to start with. This is the `original image' and the intension is to repeat it
+several times and test it with different settings.
+
+All images have is a width and an height. A number of images are available, more are in the planning.
+Each image have some intended use. Each image have a specific purpose in mind. For each image some typical setting ranges
+are given. These ranges are not mandatory but just sensible ranges for values to begin with. If the results are not good
+do try some values outside the advised ranges.
+
+\subsection{The line}
+The purpose of the line\index{line|see {image}}\index{image!line} is to see the effects of some setting. It is the basis
+of all testing.
+On its own it does not give much information but chaining a number of lines in a row where all lines are the same but
+for one the gradual effects of that one setting changing over the full length  will show the effect more clearly.
+A next line above the first one  allows for a second setting to check the combined effect of two settings in an easy way.
+
+Line lengths are defined in the x direction by setting the width. The typical setting falls in the range of 5 mm to 20 mm.
+A line width is not defined. Note: The width is defined by the laser spot, very small and may be depending on how the laser
+equipment is mounted if the spot is not round. In most cases it is a relative long and in the middle thin elliptic shaped.
+
+Room between lines in the y direction are defined by setting the height. A typical setting is in de range of 0.25 mm to 0.5 mm.
+
+\subsection{The box}
+The purpose of the box\index{box|see {image}}\index{image!box} is to see the effect of laser power in the lower ranges
+at higher speed.
+
+A box is defined by four lines along its side. There is no filling in the box. A typical setting for width and height
+is in the range of 50 to 100 mm. For higher speeds larger settings give better results.
+
+While the G-Code interpreter is executing blocks of commands it has a few things to take care for. One is stopping at
+(sharp) corners. When it is getting near a corner it must stop moving in one direction and start moving in another one.
+This will take time and deviations from the selected speed.
+
+Some G-Code interpreters will keep the laser at constant power all the time but others might be adaptive and when
+decelerating for the corner also lower the laser power.
+
+Lasers have the property that below some power\index{argument under test!power} threshold level they will not fire,
+there is just not enough power to emit any light. Finding that level where the laser is guaranteed to fire is an
+important step for getting good and consistent result.
+
+Running a test with a box can produce tree results.
+\begin{enumerate}
+    \item The line ends at the corners are more black than in the middle.
+    \item The line ends at the corner are equally black as in the middle.
+    \item The line stops before it is at the corner.
+\end{enumerate}
+
+In the first case the conclusion is that the G-Code interpreter is not adaptive. Lower speeds result in more blackness.
+Try to work with lower speeds in your project to reduce the effects of this.
+
+In the second case the results are fine. The G-Code interpreter may or may not be adaptive. The settings for speed an
+power are useful and give good results.
+
+In the third case the G-Code interpreter is adaptive and is lowering the laser power below the threshold point of the
+laser. Again, try to lower the speed to reduce the effects of this. Also, try to find out what the threshold level of
+the laser is so you can keep that in mind when selecting a power level.
+
+\subsection{The square}
+The purpose of the square\index{square|see {image}}\index{image!square} is to see the effects of engraving a surface.
+
+A square is defined as a box with a filling in lines per cm in it. Typical settings for width and height fall in the
+range of 5 mm to 100 mm. Typical settings for lines/cm are 20 lines/cm to 50 lines/cm. (higher settings will increase
+processing time proportionally.)
+
+Typically when engraving a line it has a length and nearly any width. The laser is in focus and ideally all the laser
+light is in one spot. This might result in an engraving with many visible lines, like an old copper engraving print.
+This might or might not be the result to achieve. Raising Z up to a few mm will soften the lines. Lowering might give
+the same results but with the effect that the laser equipment is getting nearer to the surface.
+
+One way of softening this effect is getting the laser out of focus by raising the Z height\index{argument under test!Z height}
+(and maybe raising the power to keep in check with the grey level) There is no measurable good or bad result for this
+test, it all depends on the desired effects but this test give some more control over the end results.
+
+\subsection{The card}
+(Not yet implemented.)
+
+The intention of the card\index{card|see {image}}\index{image!card} is to have a small representative part of the end
+result and do a test run with it. There is no measurable good or bad result, it serves more as a check around the
+selected settings for fine tuning or as a final check.
+
+Once this test is available the it will also be possible to engrave the full image. Except that the software for
+engraving at some speed and power settings might also have some operations on image manipulating such as sharpening,
+softening, despeckle, gamma correction and more.
+
+\section{Operations}
+A limited set of operations is available. As a matter of fact only two and one is automatic applied. The other one
+can be applied zero, once or two times. More operations and more freedom on applying or not is in development.
+
+Each operation\index{operation}, except for the generator operation will result in a new image where the original
+image is part once or more times. The generator operation creates a G-Code file.
+
+\subsection{The Pattern}
+The intention of the pattern%
+\index{pattern|see {operation}}\index{operation!pattern}
+is to repeat an image in x and y
+direction with no or some space between all images.
+
+Each image copy is numbered with grid coordinates, on the x axis running from (0, y), (1, y) ... (n, y) and similar
+on the y axis from (x, 0), (x, 1) ... (x, m). The grit numbering is fixed and other operations will not change it.
+
+Repeated pattern operations will result in multiple levels of coordinates and each original image\index{image!original}
+will have a unique address. The unique address of an original image and the total count of original images on
+the x axis (or y axis) is used to calculate values for arguments under test.
+
+\subsection{The Grid and border}
+(Not yet implemented.)
+
+\subsection{The Rotation}
+(Not yet implemented.)
+
+The purpose of this operation is to rotate the image over a number of degrees at its centre.
+
+\subsection{The Translation}
+(Not yet implemented.)
+
+\subsection{The G-Code generator}
+Technically this is an operation\index{generator|see {operation}}\index{operation!generator} and it is applied as
+the last operation. The results are not another image but a G-Code file.
+
+This operation have several tasks.
+\begin{itemize}
+    \item Calculate values for arguments under test with each original image.
+    \item Check and clip all values against target machine minimum and maximum values.
+    \item Generate G-Code file suited to the target machine.
+    \item Write G-Code to file.
+\end{itemize}
+
+\paragraph{Calculating values for arguments under test.}~\\
+At this phase the maximum number of original images in x and y direction is calculated. Then for each
+original image\index{image!original} the values for the arguments under test are calculated.
+
+All images in the x or y direction may or may not be all in a straight line. X and y here are index numbers and not
+positions on a XY plane. Rotating an image may result in direction changes but the numbering is not changed, e.g.:
+rotating 90 degrees counter clockwise will result in the x numbering running in the y direction and the y numbering
+in the -x direction. No corrections are made for this and values for arguments under test are applied as calculated
+for the x and y value.
+
+For each argument under test\index{argument under test} a value is calculated using the formula
+
+\begin{equation}
+    value_a = min_a + \frac{index_a}{index_{a, max}}(max_a - min_a)
+\end{equation}
+
+Where $a$ is $x$ or $y$, $min$ and $max$ are given limits by scale values and $index_a$ and $index_{a,max}$ depend on
+position and number of original images in a given direction.
+
+Then $value_x$ and $value_y$ are added together, this sum is used as the value for the argument under test for the
+image with index $(x, y)$.
+
+Example: Speed values is scaled in the X direction as $(0, 0)$ and in the Y direction as $(20, 50)$. Power values is
+scaled in the X direction as $(100, 200)$ and in the Y direction as $(0, 0)$ and there are 10 original images in the
+x direction and 4 in the y direction.
+
+Then the speed (in mm/sec) and power value for image with index $(3, 2)$ is:
+\[ speed_{x} = 0 + \frac{3}{10}(0 - 0) = 0 \]
+\[ speed_{y} = 20 + \frac{2}{5}(50 - 20) = 32 \]
+\[ speed = 32 \]
+~\\
+\[ power_{x} = 100 + \frac{3}{10}(200 - 100) = 160\]
+\[ power_{y} = 0 + \frac{2}{5}(0 - 0) = 0\]
+\[ power = 160 \]
+
+One thing to notice is that it is possible to have scaled values for arguments under test in both X and
+Y direction. The two will be added together and the results will be a skewed setting on the XY plane for that
+argument under test.
+
+\paragraph{Check and clip.}~\\
+\index{clip}Before G-Code is generated all calculated values are checked against machine limits\index{machine limits}.
+For configuring machine limits see the chapter on configuration details.
+
+Each and every calculated value\index{calculated value} is checked against a minimum value and a maximum value.
+If the calculated value is less than the minimum value then it is replaced by the minimum.
+If the calculated value is greater then the maximum value it it replaced by that.
+
+\Warning{It is not guaranteed that all values used are within machine limits\index{configuration!machinesettings}.
+There are user supplied sections for intro, header and footer. The user can inject values\index{inject values} out of range.}
+
+\paragraph{Generate G-Code.}~\\
+The next phase is to generate\index{operation!generator|textbf} G-Code from the final image. The G-Code is partitioned in several sections.
+\begin{itemize}
+    \item \GS\ information details.
+    \item User supplied info section (copied verbatim, no processing done)
+    \item Test pattern details, all settings supplied in the user interface as an overview.
+    \item X and Y ranges used by the test pattern.
+    \item G-Code settings required by the script.
+    \item User supplied header section (copied verbatim, no processing done)
+    \item G-Code for the test pattern
+    \item G-Code to safely stop the script
+    \item User supplied footer section (copied verbatim, no processing done)
+\end{itemize}
+
+The three user supplied sections are copied verbatim. No checking or other forms of parsing is done on it.
+This may be a cause of problems. It is possible to inject values that are out of machine acceptable limits
+or a comment form is used that is not supported by the G-code interpreter.
+
+\WarningCheckAndTest
+
+\paragraph{Write G-Code.}~\\
+Building and generating a G-Code file uses a build area\index{build area}. Its location is configurable and by default
+`.\textbackslash{}build'. Intermediate results are stored here if required and so is the final result.
+
+%The user interface also have the option to copy the final result to any other location.
+
+\section{Arguments under test}
+\index{argument under test|textbf}There are three values that can vary over a range of values.
+The three being Z height\index{argument under test!Z height}\index{Z height|see {argument under test}},
+speed\index{argument under test!speed}\index{speed|see {argument under test}} (for G1 codes)
+and Laser power\index{argument under test!power}\index{power|see {argument under test}}.
+
+Applied values range from a minimum value to a maximum value and are calculated linearly in X and Y direction
+based on the number of original images\index{image!original} in each direction. The calculated values in X and Y
+direction are added together and used as the final value.
+
+On normal use a calculated value will have some scale in one direction and is constant in the other. Test patterns
+using this configuration result in one argument changing from image to image in one direction and another one
+changing in the other direction. Finding good or bad result is more or less checking a table.
+
+It is possible for calculated values to have some scale in both directions. This can be useful if the normal use
+will give skewed results. While skewing the scales in the other direction this can be compensated. Its use will
+depend on specific test details.

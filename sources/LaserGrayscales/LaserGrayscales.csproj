@@ -7,22 +7,32 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <RootNamespace>As.Applications</RootNamespace>
-    <Version>0.1.3.0</Version>
+    <Version>0.3.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Remove="App.cs" />
+    <Compile Remove="Data\ObservableKvCollection.cs" />
+    <Compile Remove="Data\XmlContent.cs" />
     <Compile Remove="Data\XParser.cs" />
     <Compile Remove="Loggers\DebugLogger.cs" />
+    <Compile Remove="Validation\DomainAttribute.cs" />
+    <Compile Remove="ViewModels\MainViewModel.cs" />
+    <Compile Remove="ViewModels\SliderScaleViewModel.cs" />
+    <Compile Remove="Views\MainView.xaml.cs" />
+    <Compile Remove="Views\SliderScaleView.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Views\MainView.xaml" />
+    <Page Remove="Views\SliderScaleView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\..\ChangeLog.txt" Link="ChangeLog.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\doc\bootscreen.png" Link="doc\bootscreen.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="..\..\doc\Burnscales.jpg" Link="Burnscales.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,16 +45,6 @@
     <None Update="LaserGrayscales.log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="doc\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="..\..\doc\LaserGrayscales-Introduction.md" Link="doc\LaserGrayscales-Introduction.md">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>
