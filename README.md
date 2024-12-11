@@ -51,6 +51,10 @@ No special actions are required. LaserGrayscales needs all files from its releas
 On first startup your system might ask for a specific Microsoft Runtime system, please follow the Microsoft directions to install it.
 
 
+## Security
+
+For directions on decurity issues see [SECURITY](SECURITY.md)
+
 ## Dependencies
 
 Grayscales is realised with Visual Studio 2022 in a .NET 8 application using WPF with the help of two external packages.
