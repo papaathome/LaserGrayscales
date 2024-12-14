@@ -5,7 +5,7 @@ Generate gray scales in G-code for CNC laser engravers, c# vs2022, .NET 8 WPF ap
 
 Laser engraving as function of X and Y while changing Z-height, speed and laser power for test and check purposes.
 
-Full documentation of LaserGrayscales [available]({LaserGrayscales.pdf). This introduction will explain some basics, for full details see the documentation.
+Full documentation of LaserGrayscales [available](LaserGrayscales.pdf). This introduction will explain some basics, for full details see the documentation.
 
 **Warning**: Generating a test script does imply that a file is generated. It does **not** imply that a _valid_ file is generated. Always check the content of a generated test script before you run it! Remember, LaserGrayscales is still in beta versions.
 
