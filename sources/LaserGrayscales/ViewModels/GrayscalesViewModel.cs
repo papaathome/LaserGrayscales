@@ -117,7 +117,8 @@ namespace As.Applications.ViewModels
                 case nameof(CanGenerate):
                     return;
             }
-            var result = Error == "";
+            var result = (Error == "");
+            if (!result) UI.ErrorFormat($"Error: {Error}");
             CanPreview = result;
             CanGenerate = result;
         }

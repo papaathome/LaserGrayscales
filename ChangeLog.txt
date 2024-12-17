@@ -7,23 +7,9 @@ Requirement status:
  * x Implemented but partial, untested or broken.
  * v Implemented and tested.
 
-Version: 0.3.0.0, development, debug.
+Version: 0.3.1.0, development, debug.
 Requirements:
- * v Limited Caliburn logging in debug log to WARN or higher.
- * v Restored 'Save config when changed' on exit.
- * v Report failing validity in console.
- * v Implemented images/operators model
- * v Refactored XML streaming.
- * v Added use of INotifyPropertyChanged.
- * v Refactored DataErrorInfo reporting.
- * v Documentation in PDF format.
- * v Can set G0 speed independent from G1 speed.
- * v Set laser power command using S or Q (or any other required code)
- * v Set comment mode using ';' or '(' and ')' (or any other required code)
- * v Multiple forms/tabs for settings.
- * v Can set Z height.
- * v Issues tracking done on GitView
- * v Can load/store different configurations.
+ * not yet selected.
 
 Version: 0.5.0.0, development, debug.
 Version 0.6.0.0, development release.
@@ -65,6 +51,30 @@ Fixed issues
 
 Releases
 --------
+
+Version: 0.3.0.1, development, debug.
+Release date: 2024-12-17.
+ * v blocking bug on load, must have a path to a file for an image
+
+
+Version: 0.3.0.0, development, debug.
+Release date: 2024-12-14.
+ * v Limited Caliburn logging in debug log to WARN or higher.
+ * v Restored 'Save config when changed' on exit.
+ * v Report failing validity in console.
+ * v Implemented images/operators model
+ * v Refactored XML streaming.
+ * v Added use of INotifyPropertyChanged.
+ * v Refactored DataErrorInfo reporting.
+ * v Documentation in PDF format.
+ * v Can set G0 speed independent from G1 speed.
+ * v Set laser power command using S or Q (or any other required code)
+ * v Set comment mode using ';' or '(' and ')' (or any other required code)
+ * v Multiple forms/tabs for settings.
+ * v Can set Z height.
+ * v Issues tracking done on GitView
+ * v Can load/store different configurations.
+
 
 Version: 0.1.2.0, development, debug.
 Release date: 2024-10-21.

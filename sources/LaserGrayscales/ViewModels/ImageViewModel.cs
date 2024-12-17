@@ -98,7 +98,7 @@ namespace As.Applications.ViewModels
         public string ImagePath
         {
             get => _image_path;
-            set => Set(ref _image_path, value, value.ValidateFileExists());
+            set => Set(ref _image_path, value, value.ValidateFileExists(noempty: (CurrentImage == ImageType.Card)));
         }
         string _image_path = "";
 

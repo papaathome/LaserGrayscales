@@ -1,7 +1,10 @@
 ﻿namespace As.Applications.Data.Images
 {
-    public partial class Card() : Image
+    public partial class Card : Image
     {
+
+        public Card() : base() { noEmptyImagePath = true; }
+
         public override string ToString() => Data.ToString.Format(nameof(Card), $"Width={Width}, Height={Height}, Lines/cm={LinesPerCm}, Image=\"{ImagePath}\"");
 
         #region IImage

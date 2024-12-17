@@ -44,7 +44,7 @@ namespace As.Applications.Validation
         /// Check if file exists, optionaly accept empty paths for no file specified.
         /// </summary>
         /// <param name="path">Path to check</param>
-        /// <param name="noempty">True: do allow empty file paths; False empty file path is not accepted</param>
+        /// <param name="noempty">True: do not allow empty file paths; False empty file path is accepted</param>
         /// <param name="name">Name of the value</param>
         /// <returns>Empty if accepted; Error message otherwise</returns>
         static public string ValidateFileExists(this string? path, bool noempty, [CallerMemberName] string name = "")

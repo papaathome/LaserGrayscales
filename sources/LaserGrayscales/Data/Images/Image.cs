@@ -51,6 +51,8 @@ namespace As.Applications.Data.Images
         double _lines_per_cm = 0;
         public bool ShouldSerializeLinesPerCm() => (0 < LinesPerCm);
 
+        protected bool noEmptyImagePath { get; set; } = false;
+
         /// <summary>
         /// Path to a file containing the image picture for filling
         /// </summary>
@@ -58,7 +60,7 @@ namespace As.Applications.Data.Images
         public string ImagePath
         {
             get { return _imagePath; }
-            set { Set(ref _imagePath, value, value.ValidateFileExists()); }
+            set { Set(ref _imagePath, value, value.ValidateFileExists(noempty: noEmptyImagePath)); }
         }
         string _imagePath = "";
         public bool ShouldSerializeImagePath() => !string.IsNullOrWhiteSpace(ImagePath);
